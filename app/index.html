@@ -18,12 +18,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.js"></script>
     <script src="app.js"></script>
+    <script src="_partials/partials.js"></script>
 
 </head>
 
 <body ng-app="app">
 
-<div ng-view></div>
+<div class="container">
+    <div ng-include="'_partials/header.html'"></div>
+    <div ng-view></div>
+</div>
 
 <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script> -->
 </body>
