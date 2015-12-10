@@ -1,0 +1,19 @@
+{
+  "name": "team-orginazer-client",
+  "version": "0.0.0",
+  "description": "team orginazer angular js client ",
+  "repository": "https://github.com/AndriyK/team_organizer",
+  "license": "MIT",
+  "devDependencies": {
+    "jasmine-core": "^2.3.4",
+    "karma": "~0.12",
+    "karma-chrome-launcher": "^0.1.12",
+    "karma-jasmine": "^0.3.5",
+    "karma-junit-reporter": "^0.2.2"
+  },
+  "scripts": {
+    "pretest": "npm install",
+    "test": "karma start karma.conf.js",
+    "test-single-run": "karma start karma.conf.js  --single-run"
+  }
+}

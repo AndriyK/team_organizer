@@ -1,5 +1,5 @@
-app.controller('HeaderCtrl', ['$scope', '$location', function($scope, $location) {
-    $scope.isActive = function (viewLocation) {
+app.controller('HeaderCtrl', ['$location', function($location) {
+    this.isActive = function (viewLocation) {
         return viewLocation === $location.path();
     };
 }]);
