@@ -18,14 +18,15 @@
     <script src="js_lib/angular_1.4.js"></script>
     <script src="js_lib/angular_route_1.4.js"></script>
     <script src="app.js"></script>
-    <script src="_partials/partials.js"></script>
+    <script src="views/_partials/header.js"></script>
+    <script src="views/register.js"></script>
 
 </head>
 
 <body ng-app="app">
 
 <div class="container">
-    <div ng-include="'_partials/header.html'"></div>
+    <div ng-include="'views/_partials/header.html'"></div>
     <div ng-view></div>
 </div>
 

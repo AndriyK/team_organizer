@@ -1,0 +1,17 @@
+    <form class="form-signin" ng-submit="register()">
+        <h2 class="form-signin-heading">Please register</h2>
+        {{error}}
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" ng-model="player.email" id="inputEmail" class="form-control" placeholder="Email address" required>
+
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" ng-model="player.password" id="inputPassword" class="form-control" placeholder="Password" required>
+
+        <label for="inputPasswordRepeat" class="sr-only">Confirm password</label>
+        <input type="password" id="inputPasswordRepeat" ng-model="player.password_repeat" class="form-control" placeholder="Confirm password" required>
+
+        <label for="inputName" class="sr-only">Name</label>
+        <input type="text" id="inputName" ng-model="player.name" class="form-control" placeholder="Name" required autofocus>
+        <br>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+    </form>

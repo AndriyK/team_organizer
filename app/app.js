@@ -4,21 +4,18 @@ app.config(['$routeProvider', function($routeProvider) {
     $routeProvider
         .when("/",
             {
-                templateUrl: "intro/intro.html"
-                //controller: "AppCtrl",
-                //controllerAs: "app"
+                templateUrl: "views/intro.html"
             }
         )
         .when("/register",
             {
-                templateUrl: "register/register.html",
-                //controller: "RegisterCtrl"
-                //controllerAs: "regCtrl"
+                templateUrl: "views/register.html",
+                controller: "RegisterCtrl"
             }
         )
         .when("/login",
             {
-                templateUrl: "login/login.html"
+                templateUrl: "views/login.html"
             }
         )
         .otherwise(
