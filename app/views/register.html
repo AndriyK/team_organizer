@@ -1,6 +1,10 @@
     <form class="form-signin" ng-submit="register()">
         <h2 class="form-signin-heading">Please register</h2>
-        {{error}}
+
+        <p class="text-danger" ng-repeat="error in errors">
+            {{"- " + error}}
+        </p>
+
         <label for="inputEmail" class="sr-only">Email address</label>
         <input type="email" ng-model="player.email" id="inputEmail" class="form-control" placeholder="Email address" required>
 

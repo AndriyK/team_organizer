@@ -25,14 +25,14 @@ describe('app.partials', function() {
             expect(controller).toBeDefined();
         });
 
-        it('should be functional isActive method', function(){
+        it('should be functional isPageActive method', function(){
             var path = "/login";
 
-            expect(controller.isActive(path)).toBeFalsy();
+            expect(controller.isPageActive(path)).toBeFalsy();
 
             $location.path(path);
 
-            expect(controller.isActive(path)).toBeTruthy();
+            expect(controller.isPageActive(path)).toBeTruthy();
         });
 
     });

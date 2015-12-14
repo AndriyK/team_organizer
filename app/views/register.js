@@ -1,18 +1,22 @@
-app.controller('RegisterCtrl', ['$scope', '$http', '$window', '$location', function($scope, $http, $window, $location) {
+app.controller('RegisterCtrl', ['$scope', 'user', 'auth', '$location', function($scope, user, auth, $location) {
 
     $scope.register = function() {
-        $scope.error = '';
-        $http.post('http://localhost/team/api/index.php/v1/players', $scope.player).success(
-            function (data) {
-                $window.sessionStorage.access_token = data.access_token;
-                $location.path('/player').replace();
-            }).error(
-            function (data) {
-                angular.forEach(data, function (error) {
-                    $scope.error= error.message;
-                });
-            }
-        );
+        $scope.errors = [];
+
+        user.register($scope.player)
+            .success(
+                function (data) {
+                    auth.saveToken(data.token);
+                    $location.path('/player').replace();
+                }
+            )
+            .error(
+                function (data) {
+                    angular.forEach(data, function (error) {
+                        $scope.errors.push(error.message);
+                    });
+                }
+            );
     }
 
 }]);

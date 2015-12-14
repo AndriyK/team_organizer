@@ -1,9 +1,18 @@
 <div class="header" ng-controller="HeaderCtrl as header">
     <nav>
         <ul class="nav nav-pills pull-right">
-            <li role="presentation" ng-class="{ active: header.isActive('/')}"><a href="#/">Home</a></li>
-            <li role="presentation" ng-class="{ active: header.isActive('/register')}"><a href="#/register">Register</a></li>
-            <li role="presentation" ng-class="{ active: header.isActive('/login')}"><a href="#/login">Sign in</a></li>
+            <li role="presentation" ng-class="{ active: header.isPageActive('/') || header.isPageActive('/player')}">
+                <a href="#/">Home</a>
+            </li>
+            <li role="presentation" ng-hide="header.isUserLogged()"  ng-class="{ active: header.isPageActive('/register')}">
+                <a href="#/register">Register</a>
+            </li>
+            <li role="presentation" ng-hide="header.isUserLogged()" ng-class="{ active: header.isPageActive('/login')}">
+                <a href="#/login">Sign in</a>
+            </li>
+            <li role="presentation" ng-show="header.isUserLogged()">
+                <a href="#/logout" ng-click="header.logout()" >Log out</a>
+            </li>
         </ul>
     </nav>
     <h3 class="text-muted">Team orginizer</h3>
