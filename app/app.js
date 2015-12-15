@@ -3,25 +3,19 @@ var app = angular.module('app', ['ngRoute']);
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider
         .when("/",
-            {
-                templateUrl: "views/intro.html"
-            }
+            {templateUrl: "views/intro.html"}
         )
         .when("/register",
-            {
-                templateUrl: "views/register.html",
-                controller: "RegisterCtrl"
-            }
+            {templateUrl: "views/register.html", controller: "RegisterCtrl"}
         )
         .when("/login",
-            {
-                templateUrl: "views/login.html"
-            }
+            {templateUrl: "views/login.html", controller: "LoginCtrl"}
+        )
+        .when("/logout",
+            {template: "", controller: "LogoutCtrl"}
         )
         .when("/player",
-            {
-                templateUrl: "views/player.html"
-            }
+            {templateUrl: "views/player.html"}
         )
         .otherwise(
             {redirectTo: "/"}
@@ -74,10 +68,11 @@ function userService($http, API) {
         return $http.post(API + '/players', data)
     }
 
-    self.login = function(username, password) {
-        return $http.post(API + '/auth', {
-            username: username,
-            password: password
+    self.login = function(email, password, rememberMe) {
+        return $http.post(API + '/auth/login', {
+            email: email,
+            password: password,
+            rememberMe: rememberMe
         })
     };
 
