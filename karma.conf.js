@@ -8,7 +8,8 @@ module.exports = function(config){
             'app/js_lib/angular_route_1.4.js',
             'app/js_lib/angular_mock_1.4.js',
             'app/*.js',
-            'app/views/_partials/*.js'
+            'app/views/_partials/*.js',
+            'app/views/*.js'
         ],
 
         autoWatch : true,

@@ -35,5 +35,9 @@ describe('app.partials', function() {
             expect(controller.isPageActive(path)).toBeTruthy();
         });
 
+        it('should have isUserLogged method', function(){
+            expect(controller.isUserLogged).toBeDefined();
+        });
+
     });
 });
