@@ -1,6 +1,6 @@
 'use strict';
 
-describe('app.logout', function() {
+describe('app.compoments.logout', function() {
 
     beforeEach(module('app'));
 
@@ -11,20 +11,20 @@ describe('app.logout', function() {
     }));
 
     describe('logout controller', function(){
-        var $location, controller, $window, auth;
+        var $location, controller, $window, authService;
 
-        beforeEach(inject(function(_$location_, _$window_, _auth_){
+        beforeEach(inject(function(_$location_, _$window_, _authService_){
             $location = _$location_;
             $location.path("/logout");
 
             $window = _$window_;
             $window.localStorage.token = "security_tocken";
 
-            auth = _auth_;
+            authService = _authService_;
         }));
 
         beforeEach(function() {
-            controller = $controller('LogoutCtrl', $location, auth);
+            controller = $controller('LogoutCtrl', $location, authService);
         });
 
         it('should be defined logout controller', function() {
@@ -36,7 +36,7 @@ describe('app.logout', function() {
         });
 
         it('user should be not authed', function(){
-            expect(auth.isAuthed()).toBeFalsy();
+            expect(authService.isAuthed()).toBeFalsy();
         });
     });
 });

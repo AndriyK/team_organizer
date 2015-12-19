@@ -1,6 +1,6 @@
 'use strict';
 
-describe('app.login', function() {
+describe('app..components.login', function() {
 
     beforeEach(module('app'));
 
@@ -11,18 +11,18 @@ describe('app.login', function() {
     }));
 
     describe('login controller', function(){
-        var $location, controller, auth, user, $scope, $httpBackend, API;
+        var $location, controller, authService, userService, $scope, $httpBackend, API_URL;
 
-        beforeEach(inject(function(_$location_, _user_, _auth_, _$httpBackend_, _API_){
+        beforeEach(inject(function(_$location_, _userService_, _authService_, _$httpBackend_, _API_URL_){
             $location = _$location_;
-            auth = _auth_;
+            authService = _authService_;
             $scope = {};
             $httpBackend = _$httpBackend_;
-            API = _API_;
+            API_URL = _API_URL_;
         }));
 
         beforeEach(function() {
-            controller = $controller('LoginCtrl', {$scope: $scope}, user, auth, $location);
+            controller = $controller('LoginCtrl', {$scope: $scope}, userService, authService, $location);
         });
 
         it('should be defined login controller', function() {
@@ -36,15 +36,15 @@ describe('app.login', function() {
             $scope.user = userData;
 
             $httpBackend
-                .expectPOST(API + '/auth/login', userData)
+                .expectPOST(API_URL + '/auth/login', userData)
                 .respond({"token": "security_token"});
 
             $scope.login();
 
             $httpBackend.flush();
 
-            expect(auth.getToken()).toEqual("security_token");
-            expect($location.path()).toEqual("/player");
+            expect(authService.getToken()).toEqual("security_token");
+            expect($location.path()).toEqual("/dashboard");
         });
 
         it('should return error message for wrong credentials', function() {
@@ -55,7 +55,7 @@ describe('app.login', function() {
             $scope.user = userData;
 
             $httpBackend
-                .expectPOST(API + '/auth/login', userData)
+                .expectPOST(API_URL + '/auth/login', userData)
                 .respond(401, {"errors": [error_message]});
 
             $scope.login();

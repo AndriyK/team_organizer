@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>Team orginizer</title>
+
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+        <!-- Custom styles for this template -->
+        <link href="assets/css/app.css" rel="stylesheet">
+    </head>
+
+    <body ng-app="app">
+        <div class="container">
+            <div ng-include="'app/shared/header/header.html'"></div>
+            <div ng-view></div>
+        </div>
+
+        <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script> -->
+        <script src="assets/libs/angular/angular_1.4.js"></script>
+        <script src="assets/libs/angular/angular_route_1.4.js"></script>
+        <script src="app/app.js"></script>
+        <script src="app/app.config.js"></script>
+        <script src="app/app.services.js"></script>
+        <script src="app/shared/header/header.js"></script>
+        <script src="app/components/register/register.js"></script>
+        <script src="app/components/login/login.js"></script>
+        <script src="app/components/logout/logout.js"></script>
+    </body>
+</html>

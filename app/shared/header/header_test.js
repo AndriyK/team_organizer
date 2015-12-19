@@ -1,6 +1,6 @@
 'use strict';
 
-describe('app.partials', function() {
+describe('app.shared.header', function() {
 
     beforeEach(module('app'));
 
