@@ -11,7 +11,7 @@ angular
                 .success(
                     function (data) {
                         authService.saveToken(data.token);
-                        $location.path('/dashboard').replace();
+                        $location.path('/teams').replace();
                     }
                 )
                 .error(

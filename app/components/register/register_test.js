@@ -29,7 +29,7 @@ describe('app.components.register', function() {
             expect(controller).toBeDefined();
         });
 
-        it('should return token for newly created user', function() {
+        it('should return token for newly created user and redirect to teams page', function() {
 
             var userData = {"email":"some@mail.com", "password":"pass", "password_repeat":"pass", "name":"Player"};
 
@@ -44,7 +44,7 @@ describe('app.components.register', function() {
             $httpBackend.flush();
 
             expect(authService.getToken()).toEqual("security_token_for_newly_created_user");
-            expect($location.path()).toEqual("/dashboard");
+            expect($location.path()).toEqual("/teams");
         });
 
         it('should return error message for wrong register data', function() {

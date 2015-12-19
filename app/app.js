@@ -19,6 +19,12 @@ angular
             .when("/dashboard",
                 {templateUrl: "app/components/dashboard/dashboard.html"}
             )
+            .when("/teams",
+                {templateUrl: "app/components/teams/teams.html"}
+            )
+            .when("/games",
+                {templateUrl: "app/components/games/games.html"}
+            )
             .otherwise(
                 {redirectTo: "/"}
             );
