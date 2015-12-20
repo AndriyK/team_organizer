@@ -1,1 +1,18 @@
-this is teams dedicated page
+<div ng-controller="TeamsCtrl as teams">
+
+    <h5 ng-hide="teams.hasTeams()">You have no related teams at the moment. Please create or find ones.</h5>
+
+    <div ng-show="teams.hasTeams()">
+        <h3 >My teams</h3>
+        <ul>
+            <li ng-repeat="team in teams.getTeams()">{{team.name}} [{{team.sport}}] {{team.is_capitan}}</li>
+        </ul>
+    </div>
+
+
+    <div>
+        <a class="btn btn-info btn-sm">Add new team</a>
+        <a class="btn btn-info btn-sm">Find team</a>
+    </div>
+
+</div>
