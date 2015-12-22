@@ -4,11 +4,13 @@
 
     <div ng-show="teams.hasTeams()">
         <h3 >My teams</h3>
-        <ul>
-            <li ng-repeat="team in teams.getTeams()">{{team.name}} [{{team.sport}}] {{team.is_capitan}}</li>
-        </ul>
-    </div>
 
+        <uib-accordion close-others="true">
+            <uib-accordion-group heading="{{team.name}} [{{team.sport}}] {{team.is_capitan}}" ng-repeat="team in teams.getTeams()">
+                <div ng-repeat="player in team.players">{{player.name}}</div>
+            </uib-accordion-group>
+        </uib-accordion>
+    </div>
 
     <div>
         <a class="btn btn-info btn-sm">Add new team</a>

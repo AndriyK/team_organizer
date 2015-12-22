@@ -2,29 +2,21 @@ angular
 
     .module('app')
 
-    .controller('TeamsCtrl', ['$http', function($http) {
+    .controller('TeamsCtrl', ['teamsService', function(teamsService) {
+        var self = this;
 
-        //this.teams = [];
-        this.teams = [
-            {
-                "id": 14,
-                "sport": "football",
-                "name": "Super",
-                "is_capitan": "1"
-            },
-            {
-                "id": 8,
-                "sport": "football",
-                "name": "Test2",
-                "is_capitan": "0"
-            }
-        ];
+        self.teams = [];
 
-        this.hasTeams = function () {
-            return this.teams.length > 0;
+        self.hasTeams = function () {
+            return self.teams.length > 0;
         }
 
-        this.getTeams = function () {
-            return this.teams;
+        self.getTeams = function () {
+            return self.teams;
         }
+
+        teamsService.getTeams()
+            .success(function(data){
+                self.teams = data.teams;
+            });
     }]);
