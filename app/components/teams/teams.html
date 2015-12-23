@@ -1,11 +1,11 @@
 <div ng-controller="TeamsCtrl as teams">
 
+    <h3 >My teams</h3>
+
     <h5 ng-hide="teams.hasTeams()">You have no related teams at the moment. Please create or find ones.</h5>
 
     <div ng-show="teams.hasTeams()">
-        <h3 >My teams</h3>
-
-        <uib-accordion close-others="true">
+    <uib-accordion close-others="true">
             <uib-accordion-group heading="{{team.name}} [{{team.sport}}] {{team.is_capitan}}" ng-repeat="team in teams.getTeams()">
                 <div ng-repeat="player in team.players">{{player.name}}</div>
             </uib-accordion-group>
@@ -13,8 +13,42 @@
     </div>
 
     <div>
-        <a class="btn btn-info btn-sm">Add new team</a>
-        <a class="btn btn-info btn-sm">Find team</a>
+        <a class="btn btn-info btn-sm" ng-click="teams.showForm('new')">Add new team</a>
+        <a class="btn btn-info btn-sm" ng-click="teams.showForm('search')">Find team</a>
+    </div>
+
+    <div class="well well-sm" style="margin-top:3px;" ng-show="teams.showNewTeamForm" ng-submit="teams.create()">
+        <h4 class="text-center">New team</h4>
+        <form class="form-inline">
+            <div class="form-group">
+                <label for="teamName">Name</label>
+                <input type="text" id="teamName" class="form-control" placeholder="Team name" ng-model="teams.teamNew.name">
+            </div>
+            <div class="form-group">
+                <label for="teamSport">Kind of sport</label>
+                <select id="teamSport" class="form-control" ng-model="teams.teamNew.sport">
+                    <option value="football">Football</option>
+                    <option value="basketball">Basketball</option>
+                    <option value="voleyball">Voleyball</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-default btn-sm">Add</button>
+        </form>
+    </div>
+
+    <div class="well well-sm" style="margin-top:3px;" ng-show="teams.showSearchTeamForm">
+        <h4 class="text-center">Enter team name or team's player mail</h4>
+        <form class="form-inline">
+            <div class="form-group">
+                <label for="searchName">Team name</label>
+                <input type="text" class="form-control" id="searchName" name="teamSearch.name">
+            </div>
+            <div class="form-group">
+                <label for="searchmail">Player mail</label>
+                <input type="email" class="form-control" id="searchMail" name="teamSearch.mail">
+            </div>
+            <button type="submit" class="btn btn-default btn-sm">Find</button>
+        </form>
     </div>
 
 </div>

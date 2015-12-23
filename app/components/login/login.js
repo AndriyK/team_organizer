@@ -10,7 +10,7 @@ angular
             userService.login($scope.user.email, $scope.user.password, $scope.user.rememberMe)
                 .success(
                     function (data) {
-                        authService.saveToken(data.token);
+                        //authService.saveToken(data.token);
                         $location.path('/dashboard').replace();
                     }
                 )

@@ -49,6 +49,10 @@ angular
             .otherwise(
                 {redirectTo: "/"}
             );
+    }])
+    .factory('authInterceptor', authInterceptor)
+    .config(['$httpProvider', function($httpProvider) {
+        $httpProvider.interceptors.push('authInterceptor');
     }]);
 
 function checkPersmission($location, authService){
@@ -60,5 +64,28 @@ function checkPersmission($location, authService){
 function checkIsGuest($location, authService){
     if(authService.isAuthed()) {
         $location.path("/dashboard").replace();
+    }
+}
+
+function authInterceptor(API_URL, authService) {
+    return {
+        // automatically attach Authorization header
+        request: function(config) {
+            var token = authService.getToken();
+            if(config.url.indexOf(API_URL) === 0 && token) {
+                config.headers.Authorization = 'Bearer ' + token;
+            }
+
+            return config;
+        },
+
+        // If a token was sent back, save it
+        response: function(res) {
+            if(res.config.url.indexOf(API_URL) === 0 && res.data.token) {
+                authService.saveToken(res.data.token);
+            }
+
+            return res;
+        }
     }
 }

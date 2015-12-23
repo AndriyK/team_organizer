@@ -9,6 +9,8 @@ angular
     function authService($window) {
         var self = this;
 
+        var parsedToken = null;
+
         self.saveToken = function(token) {
             $window.localStorage['token'] = token;
         }
@@ -19,11 +21,31 @@ angular
 
         self.isAuthed = function() {
             var token = self.getToken();
-            return !!token;
+            if(!token) {
+                return false;
+            }
+
+            var params = self.parseToken(token);
+            return Math.round(new Date().getTime() / 1000) <= params.exp;
         }
 
         self.logout = function() {
             $window.localStorage.removeItem('token');
+            parsedToken = null;
+        }
+
+        self.parseToken = function(token) {
+            if(parsedToken === null){
+                var base64Url = token.split('.')[1];
+                var base64 = base64Url.replace('-', '+').replace('_', '/');
+                parsedToken = JSON.parse($window.atob(base64));
+            }
+
+            return parsedToken;
+        }
+
+        self.getPlayerId = function () {
+            return parsedToken.uid || 0;
         }
     }
 
