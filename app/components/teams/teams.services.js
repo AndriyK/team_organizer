@@ -14,4 +14,12 @@ angular
             return $http.post(API_URL + '/teams', {name: teamName, sport: teamSport});
         }
 
+        self.joinPlayer = function (teamId, mail) {
+            return $http.put(API_URL + '/teams/'+teamId, {join_player: mail});
+        }
+
+        self.removePlayer = function (teamId, mail) {
+            return $http.put(API_URL + '/teams/'+teamId, {remove_player: mail});
+        }
+
     }]);

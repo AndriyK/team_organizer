@@ -7,6 +7,7 @@ angular
 
         self.teams = [];
         self.teamNew = {};
+        self.playerNew = {};
         self.teamNew.sport = 'football';
 
         self.showNewTeamForm = false;
@@ -30,9 +31,9 @@ angular
         }
 
         self.create = function () {
-            console.log('Model' + self.teamNew.name + self.teamNew.sport);
             teamsService.createTeam(self.teamNew.name, self.teamNew.sport)
                 .success(function(data){
+                    data.is_capitan = 1;
                     self.teams.push(data);
                     hideForms();
                 })
@@ -41,6 +42,32 @@ angular
                 });
         }
 
+        self.joinPlayer = function (team_id) {
+            var mail = self.playerNew.mail;
+            if(!mail) {
+                console.log('do nothing - empty mail');
+                return;
+            }
+
+            teamsService.joinPlayer(team_id, mail)
+                .success(function(data){
+                    console.log('player was added');
+                })
+                .error(function(data){
+                    console.log(data);
+                });
+        }
+
+        self.removePlayer = function (team_id, mail) {
+          teamsService.removePlayer(team_id, mail)
+                .success(function(data){
+                    console.log('player was removed');
+                })
+                .error(function(data){
+                    console.log(data);
+                });
+
+        }
 
         teamsService.getTeams()
             .success(function(data){
