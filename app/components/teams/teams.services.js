@@ -22,4 +22,12 @@ angular
             return $http.put(API_URL + '/teams/'+teamId, {remove_player: mail});
         }
 
+        self.leaveTeam = function (teamId) {
+            return self.removePlayer(teamId, authService.getPlayerMail());
+        }
+
+        // GET /teams/search?name=<name>&email=<mail>
+        self.find = function (name, mail) {
+            return $http.get(API_URL + '/teams/search?name='+name+'&email='+mail);
+        }
     }]);

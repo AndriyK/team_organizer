@@ -47,6 +47,10 @@ angular
         self.getPlayerId = function () {
             return parsedToken.uid || 0;
         }
+
+        self.getPlayerMail = function () {
+            return parsedToken.mail || '';
+        }
     }
 
     function userService($http, API_URL) {
