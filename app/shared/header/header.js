@@ -10,4 +10,5 @@ angular
         this.isUserLogged = function () {
             return authService.isAuthed();
         }
+
     }]);

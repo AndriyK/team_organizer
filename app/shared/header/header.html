@@ -1,7 +1,6 @@
 <div class="header" ng-controller="HeaderCtrl as header">
     <nav>
         <ul class="nav nav-pills pull-right">
-
             <!-- guests menu items -->
             <li role="presentation" ng-class="{ active: header.isPageActive('/') }" ng-hide="header.isUserLogged()">
                 <a href="#/">Home</a>
@@ -26,8 +25,7 @@
             <li role="presentation" ng-show="header.isUserLogged()">
                 <a href="#/logout" >Log out</a>
             </li>
-
         </ul>
     </nav>
-    <h3 class="text-muted">Team orginizer</h3>
+    <h3 class="text-muted">Team organizer</h3>
 </div>
