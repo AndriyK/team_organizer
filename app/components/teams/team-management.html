@@ -1,0 +1,17 @@
+<div ng-show="{{team.is_capitan}}">
+    <div class="pull-right">
+        <button class="btn btn-default btn-sm" ng-click="teamManage.removeTeam(team.id)">Delete team</button>
+        <button class="btn btn-default btn-sm" ng-click="teamManage.renameTeam(team.id)">Rename team</button>
+    </div>
+    <div class="pull-left">
+        <form class="form-inline" ng-submit="teamManage.joinPlayer(team.id)">
+            <div class="form-group">
+                <input class="form-control input-sm" type="email" placeholder="New player's email" ng-model="teamManage.newPlayerMail">
+            </div>
+            <button type="submit" class="btn btn-default btn-sm">Join</button>
+        </form>
+    </div>
+</div>
+<div ng-hide="{{team.is_capitan}}">
+    <button class="btn btn-default btn-sm" ng-click="teamManage.leaveTeam(team.id)">Leave team</button>
+</div>

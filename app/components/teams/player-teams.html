@@ -1,0 +1,14 @@
+<h5 ng-hide="teams">You have no related teams at the moment. Please create or find ones.</h5>
+
+<uib-accordion close-others="true">
+    <uib-accordion-group ng-repeat="team in teams">
+        <uib-accordion-heading>
+            <team-heading></team-heading>
+        </uib-accordion-heading>
+
+        <team-players></team-players>
+
+        <team-management></team-management>
+
+    </uib-accordion-group>
+</uib-accordion>

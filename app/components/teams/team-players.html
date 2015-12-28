@@ -1,0 +1,11 @@
+<div class="col-md-10">
+    <span class="col-md-4" ng-repeat="player in team.players">
+        {{player.name}}
+        <a ng-show="{{team.is_capitan}}" ng-hide="{{player.is_capitan}}" ng-click="playersCtrl.removePlayer(team.id, player.email)">
+            <i class="glyphicon glyphicon-remove-sign" title="Remove player"></i>
+        </a>
+        <i class="glyphicon glyphicon-copyright-mark capitan_icon" ng-show="{{player.is_capitan}}" title="Capitan of the team"></i>
+    </span>
+</div>
+<hr>
+

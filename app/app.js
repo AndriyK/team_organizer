@@ -36,7 +36,6 @@ angular
             .when("/teams",
                 {
                     templateUrl: "app/components/teams/teams.html",
-                    controller: "TeamsCtrl",
                     resolve: {check: checkPersmission}
                 }
             )

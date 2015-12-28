@@ -1,0 +1,18 @@
+<div class="well well-sm" style="margin-top:3px;" ng-show="showCreateTeamForm">
+    <h4 class="text-center">New team</h4>
+    <form class="form-inline" ng-submit="createTeam.create()">
+        <div class="form-group">
+            <label for="teamName">Name</label>
+            <input type="text" id="teamName" class="form-control" placeholder="Team name" ng-model="createTeam.teamNew.name">
+        </div>
+        <div class="form-group">
+            <label for="teamSport">Kind of sport</label>
+            <select id="teamSport" class="form-control" ng-model="createTeam.teamNew.sport">
+                <option value="football">Football</option>
+                <option value="basketball">Basketball</option>
+                <option value="voleyball">Voleyball</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-default btn-sm">Add</button>
+    </form>
+</div>

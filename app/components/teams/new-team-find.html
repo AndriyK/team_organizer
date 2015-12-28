@@ -1,0 +1,40 @@
+<div class="well well-sm" style="margin-top:3px;" ng-show="showFindTeamForm">
+    <h4 class="text-center">Enter team name or team's player mail</h4>
+    <form class="form-inline" ng-submit="findTeam.find()">
+        <div class="form-group">
+            <label for="searchName">Team name</label>
+            <input type="text" class="form-control" id="searchName" ng-model="findTeam.search.name" value="">
+        </div>
+        <div class="form-group">
+            <label for="searchmail">Player mail</label>
+            <input type="email" class="form-control" id="searchMail" ng-model="findTeam.search.mail" value="">
+        </div>
+        <button type="submit" class="btn btn-default btn-sm">Find</button>
+    </form>
+
+    <div>
+        <p class="text-danger">{{findTeam.error}}</p>
+        <table class="table table-condensed" ng-show="findTeam.foundTeams">
+            <thead>
+            <tr>
+                <th>Sport</th>
+                <th>Team name</th>
+                <th>Players</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="foundTeam in findTeam.foundTeams">
+                <td>{{foundTeam.sport}}</td>
+                <td>{{foundTeam.name}}</td>
+                <td>
+                    <span class="label label-default" ng-repeat="player in foundTeam.players">{{player.name}}</span>
+                </td>
+                <td>
+                    <button ng-click="findTeam.joinToTeam(foundTeam.id)">Join</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
