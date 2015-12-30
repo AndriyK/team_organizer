@@ -1,0 +1,31 @@
+<h4 class="text-center" ng-show="gamesCtrl.teams">Team's games</h4>
+
+<uib-accordion close-others="true">
+    <uib-accordion-group ng-repeat="team in gamesCtrl.teams">
+        <uib-accordion-heading>
+            {{team.sport}} - {{team.name}}
+        </uib-accordion-heading>
+
+        <div ng-hide="team.games">No planned games.</div>
+
+        <table class="table table-hover" ng-show="team.games">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>When</th>
+                    <th>Where</th>
+                    <th>Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="game in team.games">
+                    <td><a href="" ng-click="gamesCtrl.removeGame(game.id)"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" title="Remove game"></span></a></td>
+                    <td>{{game.datetime}}</td>
+                    <td>{{game.location}}</td>
+                    <td>{{game.title}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </uib-accordion-group>
+</uib-accordion>

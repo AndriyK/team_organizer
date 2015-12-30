@@ -1,0 +1,35 @@
+<h3 class="text-center">Add game</h3>
+
+<form class="form-horizontal" ng-submit="newGame.add()">
+    <div class="form-group">
+        <label for="inputDate" class="col-sm-2 control-label">Date time</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputDate" placeholder="Date time" ng-model="newGame.game.date">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputPlace" class="col-sm-2 control-label">Location</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputPlace" placeholder="Place" ng-model="newGame.game.location">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputComments" class="col-sm-2 control-label">Description</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputComments" placeholder="Additional info" ng-model="newGame.game.description">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputTeam" class="col-sm-2 control-label">Team</label>
+        <div class="col-sm-10">
+            <select class="form-control" id="inputTeam" placeholder="Select a team" ng-model="newGame.game.teamId">
+                <option ng-repeat="team in newGame.teams" value="{{team.id}}">{{team.sport + " - " + team.name}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-info">Add</button>
+        </div>
+    </div>
+</form>
