@@ -2,7 +2,7 @@ angular
 
     .module('app')
 
-    .service('gamesService', ['$http', 'API_URL', function($http, API_URL){
+    .service('gamesService', ['$http', 'API_URL', 'authService', function($http, API_URL, authService){
 
         var self = this;
 
@@ -16,5 +16,17 @@ angular
 
         self.removeGame = function (gameId){
             return $http.delete(API_URL + '/games/' + gameId);
+        }
+
+        self.updateGame = function (gameId, data){
+            return $http.put(API_URL + '/games/' + gameId, data);
+        }
+
+        self.joinGame = function (gameId, playerId){
+            return self.updateGame(gameId, {'join_player': authService.getPlayerId()});
+        }
+
+        self.rejectGame = function (gameId, playerId){
+            return self.updateGame(gameId, {'reject_player': authService.getPlayerId()});
         }
     }]);

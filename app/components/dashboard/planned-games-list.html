@@ -1,0 +1,30 @@
+<h3 class="text-center">Coming games</h3>
+
+<ul class="nav nav-tabs nav-justified">
+    <li role="presentation" ng-class="{active: dashboardCtrl.isFilterActive(1)}"><a href="" ng-click="dashboardCtrl.changeFilterDays(1)">Today</a></li>
+    <li role="presentation" ng-class="{active: dashboardCtrl.isFilterActive(4)}"><a href="" ng-click="dashboardCtrl.changeFilterDays(4)">3 days</a></li>
+    <li role="presentation" ng-class="{active: dashboardCtrl.isFilterActive(0)}"><a href="" ng-click="dashboardCtrl.changeFilterDays(0)">All</a></li>
+</ul>
+
+<div class="panel panel-default" style="margin-top:-1px; padding:5px;">
+
+    <div class="well well-sm" ng-repeat="game in games | filter:dashboardCtrl.filterGamesByDate | orderBy:'date' ">
+        <h4 class="game-title">"{{game.game.title}}"</h4>
+
+        <div class="pull-right">Time: <b>{{game.date}}</b></div>
+        <div class="pull-left">Team: <b>{{game.team.sport}} - {{game.team.name}}</b></div>
+        <br>
+
+        <game-presence></game-presence>
+
+        <div class="pull-right">Location: <b>{{game.game.location}}</b></div>
+        <br>
+
+        <players-summary></players-summary>
+    </div>
+
+    <div class="alert alert-info" style="margin-top: 20px;" role="alert" ng-hide="games.length">
+        You have no planned games<strong>{{ dashboardCtrl.getFilterIntervalText() }}</strong>.
+    </div>
+
+</div>
