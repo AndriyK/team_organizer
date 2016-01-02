@@ -83,4 +83,11 @@ angular
             restrict: "E",
             templateUrl: "app/components/dashboard/players-summary.html"
         }
+    })
+
+    .directive('gameInfo', function(){
+        return {
+            restrict: "E",
+            templateUrl: "app/components/dashboard/game-info.html"
+        }
     });

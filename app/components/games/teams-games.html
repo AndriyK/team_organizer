@@ -3,7 +3,8 @@
 <uib-accordion close-others="true">
     <uib-accordion-group ng-repeat="team in gamesCtrl.teams">
         <uib-accordion-heading>
-            {{team.sport}} - {{team.name}}
+            <sport-icon sport="{{team.sport}}"></sport-icon>
+            {{team.name}}
         </uib-accordion-heading>
 
         <div ng-hide="team.games">No planned games.</div>

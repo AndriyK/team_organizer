@@ -9,17 +9,8 @@
 <div class="panel panel-default" style="margin-top:-1px; padding:5px;">
 
     <div class="well well-sm" ng-repeat="game in games | filter:dashboardCtrl.filterGamesByDate | orderBy:'date' ">
-        <h4 class="game-title">"{{game.game.title}}"</h4>
-
-        <div class="pull-right">Time: <b>{{game.date}}</b></div>
-        <div class="pull-left">Team: <b>{{game.team.sport}} - {{game.team.name}}</b></div>
-        <br>
-
+        <game-info></game-info>
         <game-presence></game-presence>
-
-        <div class="pull-right">Location: <b>{{game.game.location}}</b></div>
-        <br>
-
         <players-summary></players-summary>
     </div>
 
