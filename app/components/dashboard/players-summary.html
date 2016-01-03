@@ -1,6 +1,18 @@
-<div class="game-status">
-    Total {{game.players_summary.total.amount}} players,
-    <span class="text-success">{{game.players_summary.joined.amount}}</span> joined,
-    <span class="text-danger">{{game.players_summary.rejected.amount}}</span> rejected,
-    <span class="text-primary">{{game.players_summary.unknown.amount}}</span> unknown
+<div class="row">
+    <div class="col-md-3">Players total <span class="label label-default">{{game.players_summary.total.amount}}</span></div>
+    <div class="col-md-3 text-right">
+        joined <span class="label label-success" tooltip-placement="bottom" uib-tooltip='{{summaryCtrl.buildPlayersList(game.players_summary.joined.players)}}'>
+        {{game.players_summary.joined.amount}}
+        </span>
+    </div>
+    <div class="col-md-3 text-left">
+        <span class="label label-danger" tooltip-placement="bottom" uib-tooltip='{{summaryCtrl.buildPlayersList(game.players_summary.rejected.players)}}'>
+            {{game.players_summary.rejected.amount}}
+        </span> rejected
+    </div>
+    <div class="col-md-3 text-right">
+        <span class="label label-warning" tooltip-placement="bottom" uib-tooltip='{{summaryCtrl.buildPlayersList(game.players_summary.unknown.players)}}'>
+            {{game.players_summary.unknown.amount}}
+        </span> unknown
+    </div>
 </div>

@@ -81,7 +81,14 @@ angular
     .directive('playersSummary', function(){
         return {
             restrict: "E",
-            templateUrl: "app/components/dashboard/players-summary.html"
+            templateUrl: "app/components/dashboard/players-summary.html",
+            controller: function (){
+                var self = this;
+                self.buildPlayersList = function (players) {
+                    return players.join(', ');
+                }
+            },
+            controllerAs: 'summaryCtrl'
         }
     })
 
