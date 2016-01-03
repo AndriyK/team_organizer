@@ -1,10 +1,13 @@
-<h4 class="text-center" ng-show="gamesCtrl.teams">Team's games</h4>
+<new-game-form></new-game-form>
 
-<uib-accordion close-others="true">
-    <uib-accordion-group ng-repeat="team in gamesCtrl.teams">
+<h4 class="text-center" ng-show="teams">Coming games of your teams</h4>
+
+<uib-accordion close-others="false">
+    <uib-accordion-group ng-repeat="team in teams" is-open="true" is-disabled="true">
         <uib-accordion-heading>
             <sport-icon sport="{{team.sport}}"></sport-icon>
             {{team.name}}
+            <span class="pull-right" ng-click="gamesCtrl.showNewGameForm(team.id)"><i  class="glyphicon glyphicon-plus-sign" title="Add game"></i></span>
         </uib-accordion-heading>
 
         <div ng-hide="team.games">No planned games.</div>
@@ -12,10 +15,10 @@
         <table class="table table-hover" ng-show="team.games">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th></th>
                     <th>When</th>
                     <th>Where</th>
-                    <th>Comments</th>
+                    <th>Info</th>
                 </tr>
             </thead>
             <tbody>
