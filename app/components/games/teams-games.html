@@ -2,34 +2,43 @@
 
 <h4 class="text-center" ng-show="teams">Coming games of your teams</h4>
 
-<uib-accordion close-others="false">
-    <uib-accordion-group ng-repeat="team in teams" is-open="true" is-disabled="true">
-        <uib-accordion-heading>
+<div class="panel panel-default" ng-repeat="team in teams">
+    <div class="panel-heading">
+        <h3 class="panel-title">
             <sport-icon sport="{{team.sport}}"></sport-icon>
             {{team.name}}
-            <span class="pull-right" ng-click="gamesCtrl.showNewGameForm(team.id)"><i  class="glyphicon glyphicon-plus-sign" title="Add game"></i></span>
-        </uib-accordion-heading>
+            <span class="pull-right">
+                <button class="btn btn-xs btn-info" ng-click="gamesCtrl.showNewGameForm(team.id)"><i class="glyphicon glyphicon-plus"></i> Game</button>
+            </span>
+        </h3>
+    </div>
+    <div class="panel-body">
 
         <div ng-hide="team.games">No planned games.</div>
 
         <table class="table table-hover" ng-show="team.games">
             <thead>
                 <tr>
-                    <th></th>
                     <th>When</th>
                     <th>Where</th>
                     <th>Info</th>
+                    <th>Presence</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="game in team.games">
-                    <td><a href="" ng-click="gamesCtrl.removeGame(game.id)"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" title="Remove game"></span></a></td>
                     <td>{{game.datetime.replace(' ', 'T') | date:'H:mm, MMMM d'}}</td>
                     <td>{{game.location}}</td>
                     <td>{{game.title}}</td>
+                    <td>
+                        <button class="btn btn-xs btn-success">Join</button>
+                        <button class="btn btn-xs btn-danger">Deny</button>
+                    </td>
+                    <td><a href="" ng-click="gamesCtrl.removeGame(game.id)"><span class="glyphicon glyphicon-remove" aria-hidden="true" title="Remove game"></span></a></td>
                 </tr>
             </tbody>
         </table>
 
-    </uib-accordion-group>
-</uib-accordion>
+    </div>
+</div>
