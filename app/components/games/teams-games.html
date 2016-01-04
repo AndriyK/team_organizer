@@ -24,7 +24,7 @@
             <tbody>
                 <tr ng-repeat="game in team.games">
                     <td><a href="" ng-click="gamesCtrl.removeGame(game.id)"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" title="Remove game"></span></a></td>
-                    <td>{{game.datetime}}</td>
+                    <td>{{game.datetime.replace(' ', 'T') | date:'H:mm, MMMM d'}}</td>
                     <td>{{game.location}}</td>
                     <td>{{game.title}}</td>
                 </tr>

@@ -175,6 +175,7 @@ angular
 
                 self.find = function () {
                     self.error = '';
+                    self.foundTeams = [];
 
                     var name = self.search.name || "";
                     var mail = self.search.mail || "";

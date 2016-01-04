@@ -13,8 +13,8 @@
     </form>
 
     <div>
-        <p class="text-danger">{{findTeam.error}}</p>
-        <table class="table table-condensed" ng-show="findTeam.foundTeams">
+        <!--<p class="text-danger">{{findTeam.error}}</p>-->
+        <table class="table table-condensed" ng-show="findTeam.foundTeams.length > 0">
             <thead>
             <tr>
                 <th>Sport</th>
@@ -25,7 +25,7 @@
             </thead>
             <tbody>
             <tr ng-repeat="foundTeam in findTeam.foundTeams">
-                <td>{{foundTeam.sport}}</td>
+                <td><sport-icon sport="{{foundTeam.sport}}"></sport-icon></td>
                 <td>{{foundTeam.name}}</td>
                 <td>
                     <span class="label label-default" ng-repeat="player in foundTeam.players">{{player.name}}</span>
@@ -36,5 +36,6 @@
             </tr>
             </tbody>
         </table>
+        <div class="alert alert-danger" role="alert" ng-show="findTeam.error" style="margin-top: 10px;">{{findTeam.error}}</div>
     </div>
 </div>
