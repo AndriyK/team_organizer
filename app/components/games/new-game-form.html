@@ -1,58 +1,25 @@
-<div uib-collapse="hideNewGameForm">
+<div uib-collapse="!(!!newGame.showForm)">
     <div class="well well-sm">
         <form class="form-horizontal" ng-submit="formCtrl.add()">
             <div class="form-group">
                 <label for="inputTeam" class="col-sm-2 control-label">Team</label>
                 <div class="col-sm-10">
-                    <select class="form-control" id="inputTeam" ng-model="selectedTeamId" ng-options="team.id as team.name for team in teams"></select>
+                    <select class="form-control" id="inputTeam" ng-model="newGame.teamId" ng-options="team.id as team.name for team in teams"></select>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="inputDate" class="col-sm-2 control-label">Date time</label>
-                <div class="col-sm-4">
-                    <p class="input-group">
-                        <input
-                                type="text"
-                                id="inputDate"
-                                class="form-control"
-                                ng-model="formCtrl.datepicker.date"
-                                uib-datepicker-popup="yyyy-MM-dd"
-                                min-date="formCtrl.datepicker.minDate"
-                                max-date="formCtrl.datepicker.maxDate"
-                                is-open="formCtrl.datepicker.status.opened"
-                                datepicker-options="formCtrl.datepicker.options"
-                                show-weeks="false"
-                                show-button-bar="false"
-                                ng-required="true"
-                                close-text="Close"
-                        />
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="formCtrl.openDatepicker()"><i class="glyphicon glyphicon-calendar"></i></button>
-                        </span>
-                    </p>
-                </div>
-                <div class="col-sm-4">
-                    <uib-timepicker
-                            ng-model="formCtrl.datepicker.date"
-                            hour-step="1"
-                            minute-step="15"
-                            show-meridian="false"
-                            show-spinners="false"
-                    ></uib-timepicker>
-                </div>
-            </div>
+            <date-time-picker></date-time-picker>
 
             <div class="form-group">
                 <label for="inputPlace" class="col-sm-2 control-label">Location</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputPlace" placeholder="Place" ng-model="formCtrl.game.location">
+                    <input type="text" class="form-control" id="inputPlace" placeholder="Place" ng-model="newGame.location">
                 </div>
             </div>
             <div class="form-group">
                 <label for="inputComments" class="col-sm-2 control-label">Description</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputComments" placeholder="Training" ng-model="formCtrl.game.description">
+                    <input type="text" class="form-control" id="inputComments" placeholder="Training" ng-model="newGame.description">
                 </div>
             </div>
             <div class="form-group">

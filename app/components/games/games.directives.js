@@ -6,53 +6,55 @@ angular
         return {
             restrict: "E",
             templateUrl: "app/components/games/new-game-form.html",
-            controller: ['$scope', 'gamesService', '$route', function ($scope, gamesService, $route) {
+            controller: ['$scope', 'gamesService', function ($scope, gamesService) {
                 var self = this;
-                self.game = {};
+
+                self.add = function () {
+                    gamesService.addGame($scope.newGame.teamId, formatDateTime($scope.newGame.date), $scope.newGame.location, $scope.newGame.description || 'Training')
+                        .success(function (data){
+                            $scope.teams[$scope.newGame.teamId].games.push(data);
+                            $scope.clearTempData();
+                            $scope.infoMessage = 'Game has been added.';
+                        });
+                }
+
+                function formatDateTime(date){
+                    return date.getFullYear() + "-" + twoDigits(1 + date.getMonth()) + "-" + twoDigits(date.getDate())
+                    + " " + twoDigits(date.getHours()) + ":" + twoDigits(date.getMinutes()) + ":00";
+                }
+                function twoDigits(d) {
+                    if(0 <= d && d < 10) return "0" + d;
+                    return d;
+                }
+
+            }],
+            controllerAs: 'formCtrl'
+        }
+    })
+
+    .directive('dateTimePicker', function(){
+        return {
+            restrict: "E",
+            templateUrl: "app/components/games/date-time-picker.html",
+            controller: ['$scope', function ($scope) {
+                var self = this;
+
+                var curDate = new Date();
 
                 self.datepicker = {
-                    date: new Date().setMinutes(0),
                     status: {opened: false},
                     options: {
                         startingDay: 1
                     },
-                    minDate: new Date(),
-                    maxDate: new Date().setDate(new Date().getDate() + 30), // 2 moth more
-                }
-
-                self.add = function () {
-
-                    gamesService.addGame($scope.selectedTeamId, self.getDatepickerDate(), self.game.location, self.game.description)
-                        .success(function (data){
-                            $route.reload();
-                        });
+                    minDate: new Date().setHours(curDate.getHours() + 2),
+                    maxDate: new Date().setDate(curDate.getDate() + 30), // 2 moth more
                 }
 
                 self.openDatepicker = function (){
                     self.datepicker.status.opened = true;
                 }
-
-                self.getDatepickerDate = function (){
-                    var date = self.datepicker.date;
-                    //return date.toISOString().slice(0, 19).replace('T', ' '); // with timezone
-                    var str = date.getFullYear();
-                    var month = date.getMonth() + 1;
-                    str += '-';
-                    str += month < 10 ? '0'+month : month;
-                    var day = date.getDate();
-                    str += '-';
-                    str += day < 10 ? '0'+day : day;
-                    str += ' ';
-                    var hour = date.getHours();
-                    str += hour < 10 ? '0' + hour : hour;
-                    str += ':';
-                    var min = date.getMinutes();
-                    str += min < 10 ? '0' + min : min;
-                    str += ':00';
-                    return  str;
-                }
             }],
-            controllerAs: 'formCtrl'
+            controllerAs: 'pickerCtrl'
         }
     })
 
@@ -61,43 +63,64 @@ angular
             restrict: "E",
             templateUrl: "app/components/games/teams-games.html",
             scope: {},
-            controller: ['$scope', 'gamesService', 'teamsService', '$route', function ($scope, gamesService, teamsService, $route) {
+            controller: ['$scope', 'gamesService', 'teamsService', function ($scope, gamesService, teamsService) {
                 var self = this;
 
-                $scope.hideNewGameForm = true;
-                $scope.teams = [];
+                $scope.teams = {};
+                $scope.newGame = {};
 
                 teamsService.getTeams()
                     .success(function (data){
-                        $scope.teams = data.teams;
+                        $scope.teams = data.teams.reduce(function(obj, curItem){
+                            obj[curItem.id] = curItem;
+                            return obj;
+                        }, {});
                         self.loadGames();
                     });
 
                 self.loadGames = function () {
-                    for(var i = 0, n = $scope.teams.length; i<n; i++) {
-                        gamesService.getTeamGames($scope.teams[i].id)
-                            .success(function(data){
-                                for(var j = 0, n = $scope.teams.length; j<n; j++) {
-                                    if($scope.teams[j].id == data.id && data.games.length>0){
-                                        $scope.teams[j].games = data.games;
-                                    }
-                                }
-                            });
+                    for(var teamId in $scope.teams){
+                        (function (teamId){
+                            gamesService.getTeamGames(teamId)
+                                .success(function(data){
+                                    $scope.teams[teamId].games = data.games;
+                                });
+                        })(teamId);
                     }
                 }
 
-                self.removeGame = function (gameId){
+                self.removeGame = function (gameId, teamId){
                     gamesService.removeGame(gameId)
                         .success(function (data){
-                            $route.reload();
+                            $scope.infoMessage = 'Game has been removed.';
+                            $scope.teams[teamId].games = $scope.teams[teamId].games.filter(function(item){
+                                return item.id != gameId;
+                            });
                         });
                 }
 
                 self.showNewGameForm = function (teamId){
-                    $scope.hideNewGameForm = false;
-                    $scope.selectedTeamId = teamId;
+                    $scope.clearTempData();
+
+                    $scope.newGame.showForm = true;
+                    $scope.newGame.teamId = teamId;
                 }
-            }],
+
+                $scope.clearTempData = function () {
+                    $scope.infoMessage = '';
+
+                    $scope.newGame.showForm = false;
+                    $scope.newGame.teamId = 0;
+                    $scope.newGame.location = '';
+                    $scope.newGame.description = '';
+
+                    var dt = new Date();
+                    dt.setMinutes(0);
+                    dt.setHours(dt.getHours() + 2);
+                    $scope.newGame.date = dt;
+
+                }
+         }],
             controllerAs: 'gamesCtrl'
         }
     });

@@ -2,6 +2,11 @@
 
 <h4 class="text-center" ng-show="teams">Coming games of your teams</h4>
 
+<div class="alert alert-info" role="alert" ng-show="infoMessage">
+    {{infoMessage}}
+    <button type="button" class="close" aria-label="Close" ng-click="infoMessage=''"><span aria-hidden="true">&times;</span></button>
+</div>
+
 <div class="panel panel-default" ng-repeat="team in teams">
     <div class="panel-heading">
         <h3 class="panel-title">
@@ -14,16 +19,16 @@
     </div>
     <div class="panel-body">
 
-        <div ng-hide="team.games">No planned games.</div>
+        <div ng-hide="team.games.length">No planned games.</div>
 
-        <table class="table table-hover" ng-show="team.games">
+        <table class="table table-hover" ng-show="team.games.length">
             <thead>
                 <tr>
-                    <th>When</th>
+                    <th width="20%">When</th>
                     <th>Where</th>
                     <th>Info</th>
-                    <th>Presence</th>
-                    <th></th>
+                    <th width="15%">Presence</th>
+                    <th width="5%"></th>
                 </tr>
             </thead>
             <tbody>
@@ -35,7 +40,7 @@
                         <button class="btn btn-xs btn-success">Join</button>
                         <button class="btn btn-xs btn-danger">Deny</button>
                     </td>
-                    <td><a href="" ng-click="gamesCtrl.removeGame(game.id)"><span class="glyphicon glyphicon-remove" aria-hidden="true" title="Remove game"></span></a></td>
+                    <td><a href="" ng-click="gamesCtrl.removeGame(game.id, team.id)"><span class="glyphicon glyphicon-remove" aria-hidden="true" title="Remove game"></span></a></td>
                 </tr>
             </tbody>
         </table>
