@@ -8,13 +8,13 @@
 
 <div class="panel panel-default" style="margin-top:-1px; padding:5px;">
 
-    <div class="well well-sm" ng-repeat="game in games | filter:dashboardCtrl.filterGamesByDate | orderBy:'date' ">
+    <div class="well well-sm" ng-repeat="game in (filteredGames = (games | filter:dashboardCtrl.filterGamesByDate)) | orderBy:'date'">
         <game-info></game-info>
         <game-presence></game-presence>
         <players-summary></players-summary>
     </div>
 
-    <div class="alert alert-info" style="margin-top: 20px;" role="alert" ng-hide="games.length">
+    <div class="alert alert-info" style="margin-top: 20px;" role="alert" ng-hide="filteredGames.length">
         You have no planned games<strong>{{ dashboardCtrl.getFilterIntervalText() }}</strong>.
     </div>
 
