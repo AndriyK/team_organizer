@@ -1,11 +1,11 @@
+<div class="alert alert-{{alert.level ? alert.level : 'info'}}" role="alert" ng-show="alert.message">
+    {{alert.message}}
+    <button type="button" class="close" aria-label="Close" ng-click="alert.message=''"><span aria-hidden="true">&times;</span></button>
+</div>
+
 <new-game-form></new-game-form>
 
 <h4 class="text-center" ng-show="teams">Coming games of your teams</h4>
-
-<div class="alert alert-info" role="alert" ng-show="infoMessage">
-    {{infoMessage}}
-    <button type="button" class="close" aria-label="Close" ng-click="infoMessage=''"><span aria-hidden="true">&times;</span></button>
-</div>
 
 <div class="panel panel-default" ng-repeat="team in teams">
     <div class="panel-heading">
@@ -13,7 +13,7 @@
             <sport-icon sport="{{team.sport}}"></sport-icon>
             {{team.name}}
             <span class="pull-right">
-                <button class="btn btn-xs btn-info" ng-click="gamesCtrl.showNewGameForm(team.id)"><i class="glyphicon glyphicon-plus"></i> Game</button>
+                <button class="btn btn-xs btn-default" ng-click="gamesCtrl.showNewGameForm(team.id)"><i class="glyphicon glyphicon-plus"></i> Game</button>
             </span>
         </h3>
     </div>
@@ -37,8 +37,8 @@
                     <td>{{game.location}}</td>
                     <td>{{game.title}}</td>
                     <td>
-                        <button class="btn btn-xs btn-success">Join</button>
-                        <button class="btn btn-xs btn-danger">Deny</button>
+                        <button class="btn btn-xs btn-success" ng-disabled="gamesCtrl.getUserPresenceOnGame(game.id) == 'joined' " ng-click="gamesCtrl.setGamePresence(game.id, 1)">Join</button>
+                        <button class="btn btn-xs btn-danger" ng-disabled="gamesCtrl.getUserPresenceOnGame(game.id) == 'rejected' " ng-click="gamesCtrl.setGamePresence(game.id, 0)">Deny</button>
                     </td>
                     <td><a href="" ng-click="gamesCtrl.removeGame(game.id, team.id)"><span class="glyphicon glyphicon-remove" aria-hidden="true" title="Remove game"></span></a></td>
                 </tr>

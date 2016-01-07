@@ -10,11 +10,16 @@ angular
                 var self = this;
 
                 self.add = function () {
+                    if($scope.newGame.date < new Date()){
+                        $scope.alert = {message: 'Please enter future date time for game.', level:'danger'};
+                        return;
+                    }
+
                     gamesService.addGame($scope.newGame.teamId, formatDateTime($scope.newGame.date), $scope.newGame.location, $scope.newGame.description || 'Training')
                         .success(function (data){
                             $scope.teams[$scope.newGame.teamId].games.push(data);
                             $scope.clearTempData();
-                            $scope.infoMessage = 'Game has been added.';
+                            $scope.alert = {message: 'Game has been added.'};
                         });
                 }
 
@@ -68,6 +73,7 @@ angular
 
                 $scope.teams = {};
                 $scope.newGame = {};
+                $scope.playerGames = {};
 
                 teamsService.getTeams()
                     .success(function (data){
@@ -76,6 +82,7 @@ angular
                             return obj;
                         }, {});
                         self.loadGames();
+                        self.loadPlayerGames();
                     });
 
                 self.loadGames = function () {
@@ -89,13 +96,44 @@ angular
                     }
                 }
 
+                self.loadPlayerGames = function (){
+                    gamesService.getPlayerGames()
+                        .success(function(data){
+                            $scope.playerGames = data.games.reduce(function(obj, curItem){
+                                var gameDate = new Date( curItem.datetime.replace(' ', 'T'));
+                                var curDate = new Date();
+                                if(gameDate > curDate){
+                                    obj[curItem.id] = curItem;
+                                }
+                                return obj;
+                            }, {});
+                        });
+                }
+
                 self.removeGame = function (gameId, teamId){
                     gamesService.removeGame(gameId)
                         .success(function (data){
-                            $scope.infoMessage = 'Game has been removed.';
+                            $scope.alert = {message: 'Game has been removed.'};
                             $scope.teams[teamId].games = $scope.teams[teamId].games.filter(function(item){
                                 return item.id != gameId;
                             });
+                        });
+                }
+
+                self.getUserPresenceOnGame = function (gameId) {
+                    if(!$scope.playerGames[gameId]) {
+                        return '';
+                    }
+
+                    return ($scope.playerGames[gameId].presence) == 1 ? 'joined' : 'rejected';
+                }
+
+                self.setGamePresence = function (gameId, presence) {
+                    var methodName = presence == 1 ? gamesService.joinGame : gamesService.rejectGame;
+                    methodName(gameId)
+                        .success(function(data){
+                            data.presence = presence;
+                            $scope.playerGames[data.id] = data;
                         });
                 }
 
@@ -107,7 +145,7 @@ angular
                 }
 
                 $scope.clearTempData = function () {
-                    $scope.infoMessage = '';
+                    $scope.alert = {};
 
                     $scope.newGame.showForm = false;
                     $scope.newGame.teamId = 0;
