@@ -9,7 +9,7 @@ angular
             scope: {},
             controller:['$scope', function ($scope){
                 var self = this;
-                self.filterDaysAmount = 1;
+                self.filterDaysAmount = 0;
 
                 $scope.games = [];
 
@@ -56,24 +56,24 @@ angular
         return {
             restrict: "E",
             templateUrl: "app/components/dashboard/game-presence.html",
-            controller:['$route', function ($route){
+            controller:function (){
                 var self = this;
 
-                self.joinGame = function (gameId) {
-                    gamesService.joinGame(gameId)
+                self.joinGame = function (game) {
+                    gamesService.joinGame(game.game.id)
                         .success(function(){
-                            $route.reload();
+                            game.current_player_status = 'joined';
                         });
                 }
 
-                self.rejectGame = function (gameId) {
-                    gamesService.rejectGame(gameId)
+                self.rejectGame = function (game) {
+                    gamesService.rejectGame(game.game.id)
                         .success(function(){
-                            $route.reload();
+                            game.current_player_status = 'rejected';
                         });
                 }
 
-            }],
+            },
             controllerAs: "presenceCtrl"
         }
     }])
