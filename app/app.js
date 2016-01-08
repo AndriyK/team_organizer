@@ -66,7 +66,7 @@ function checkIsGuest($location, authService){
     }
 }
 
-function authInterceptor(API_URL, authService) {
+function authInterceptor(API_URL, authService, $location) {
     return {
         // automatically attach Authorization header
         request: function(config) {
@@ -80,10 +80,31 @@ function authInterceptor(API_URL, authService) {
 
         // If a token was sent back, save it
         response: function(res) {
-            if(res.config.url.indexOf(API_URL) === 0 && res.data.token) {
-                authService.saveToken(res.data.token);
+            if(res.config.url.indexOf(API_URL) === 0) {
+
+                // auth response - token is passed in body
+                if(res.data.token){
+                    authService.saveToken(res.data.token);
+                }
+
+                // in authed requests - token is expected to be returned in headers
+                // and may be changed in expire prolongation case
+                var token = res.headers('X-Token');
+                if(token && authService.getToken() != token){
+                    console.log('New token going to be set: ' + token);
+                    authService.saveToken(token);
+                }
             }
 
+            return res;
+        },
+
+        responseError: function(res) {
+            // process 401 - response - force login page
+            if (res.status === 401) {
+                authService.logout();
+                $location.path('/login').replace();
+            }
             return res;
         }
     }
