@@ -13,7 +13,6 @@
     </form>
 
     <div>
-        <!--<p class="text-danger">{{findTeam.error}}</p>-->
         <table class="table table-condensed" ng-show="findTeam.foundTeams.length > 0">
             <thead>
             <tr>
@@ -31,11 +30,11 @@
                     <span class="label label-default" ng-repeat="player in foundTeam.players">{{player.name}}</span>
                 </td>
                 <td>
-                    <button ng-click="findTeam.joinToTeam(foundTeam.id)">Join</button>
+                    <button class="btn btn-default btn-xs" ng-click="findTeam.joinToTeam(foundTeam.id)">Join</button>
                 </td>
             </tr>
             </tbody>
         </table>
-        <div class="alert alert-danger" role="alert" ng-show="findTeam.error" style="margin-top: 10px;">{{findTeam.error}}</div>
+        <div class="alert alert-danger" role="alert" ng-show="findTeam.showNotFound" style="margin-top: 10px;">No teams found for your request.</div>
     </div>
 </div>

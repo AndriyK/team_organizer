@@ -66,7 +66,7 @@ function checkIsGuest($location, authService){
     }
 }
 
-function authInterceptor(API_URL, authService, $location) {
+function authInterceptor(API_URL, authService, $location, $q) {
     return {
         // automatically attach Authorization header
         request: function(config) {
@@ -91,7 +91,6 @@ function authInterceptor(API_URL, authService, $location) {
                 // and may be changed in expire prolongation case
                 var token = res.headers('X-Token');
                 if(token && authService.getToken() != token){
-                    console.log('New token going to be set: ' + token);
                     authService.saveToken(token);
                 }
             }
@@ -105,7 +104,7 @@ function authInterceptor(API_URL, authService, $location) {
                 authService.logout();
                 $location.path('/login').replace();
             }
-            return res;
+            return $q.reject(res);
         }
     }
 }

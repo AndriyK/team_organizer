@@ -167,14 +167,15 @@ angular
         return {
             restrict: "E",
             templateUrl: "app/components/teams/new-team-find.html",
-            controller: ['$route', function ($route) {
+            controller: ['$route', '$filter', 'authService', function ($route, $filter, authService) {
                 var self = this;
 
                 self.search = {};
-                self.error = '';
+                self.showNotFound = false;
+                self.playerId = authService.getPlayerId();
 
                 self.find = function () {
-                    self.error = '';
+                    self.showNotFound = false;
                     self.foundTeams = [];
 
                     var name = self.search.name || "";
@@ -182,10 +183,15 @@ angular
 
                     teamsService.find(name, mail)
                         .success(function(data){
-                            self.foundTeams = data;
+                            self.foundTeams = $filter('filter')(data, function(team){
+                                return !team.players.some(function(player){
+                                    return player.id == self.playerId;
+                                });
+                            });
+                            self.showNotFound = !!!self.foundTeams.length;
                         })
                         .error(function(data){
-                            self.error = 'No teams found for your request.';
+                            self.showNotFound = true;
                         });
                 };
 
