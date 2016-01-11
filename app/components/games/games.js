@@ -1,8 +1,41 @@
-angular
+(function(){
 
-    .module('app')
+    var app = angular.module('games', []);
 
-    .directive('newGameForm', function(){
+    app.service('gamesService', ['$http', 'API_URL', 'authService', function($http, API_URL, authService){
+
+        var self = this;
+
+        self.addGame = function(teamId, date, location, description) {
+            return $http.post(API_URL + '/games', {team_id:teamId, datetime:date, location:location, title:description});
+        }
+
+        self.getTeamGames = function (teamId){
+            return $http.get(API_URL + '/teams/' + teamId + "?expand=games");
+        }
+
+        self.getPlayerGames = function (){
+            return $http.get(API_URL + '/players/' + authService.getPlayerId() + "?expand=games");
+        }
+
+        self.removeGame = function (gameId){
+            return $http.delete(API_URL + '/games/' + gameId);
+        }
+
+        self.updateGame = function (gameId, data){
+            return $http.put(API_URL + '/games/' + gameId, data);
+        }
+
+        self.joinGame = function (gameId){
+            return self.updateGame(gameId, {'join_player': authService.getPlayerId()});
+        }
+
+        self.rejectGame = function (gameId){
+            return self.updateGame(gameId, {'reject_player': authService.getPlayerId()});
+        }
+    }]);
+
+    app.directive('newGameForm', function(){
         return {
             restrict: "E",
             templateUrl: "app/components/games/new-game-form.html",
@@ -25,7 +58,7 @@ angular
 
                 function formatDateTime(date){
                     return date.getFullYear() + "-" + twoDigits(1 + date.getMonth()) + "-" + twoDigits(date.getDate())
-                    + " " + twoDigits(date.getHours()) + ":" + twoDigits(date.getMinutes()) + ":00";
+                        + " " + twoDigits(date.getHours()) + ":" + twoDigits(date.getMinutes()) + ":00";
                 }
                 function twoDigits(d) {
                     if(0 <= d && d < 10) return "0" + d;
@@ -35,9 +68,9 @@ angular
             }],
             controllerAs: 'formCtrl'
         }
-    })
+    });
 
-    .directive('dateTimePicker', function(){
+    app.directive('dateTimePicker', function(){
         return {
             restrict: "E",
             templateUrl: "app/components/games/date-time-picker.html",
@@ -61,9 +94,9 @@ angular
             }],
             controllerAs: 'pickerCtrl'
         }
-    })
+    });
 
-    .directive('teamsGames', function(){
+    app.directive('teamsGames', function(){
         return {
             restrict: "E",
             templateUrl: "app/components/games/teams-games.html",
@@ -158,7 +191,9 @@ angular
                     $scope.newGame.date = dt;
 
                 }
-         }],
+            }],
             controllerAs: 'gamesCtrl'
         }
     });
+
+})();

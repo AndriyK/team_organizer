@@ -1,8 +1,14 @@
-angular
+(function(){
 
-    .module('app')
+    var app = angular.module('dashboard', []);
 
-    .directive('plannedGamesList', ['dashboardService', function(dashboardService){
+    app.service('dashboardService', ['$http', 'API_URL', 'authService', function($http, API_URL, authService){
+        this.get = function() {
+            return $http.get(API_URL + '/dashboard/' + authService.getPlayerId());
+        }
+    }]);
+
+    app.directive('plannedGamesList', ['dashboardService', function(dashboardService){
         return {
             restrict: "E",
             templateUrl: "app/components/dashboard/planned-games-list.html",
@@ -50,9 +56,9 @@ angular
             }],
             controllerAs: "dashboardCtrl"
         }
-    }])
+    }]);
 
-    .directive('gamePresence', ['gamesService', function(gamesService){
+    app.directive('gamePresence', ['gamesService', function(gamesService){
         return {
             restrict: "E",
             templateUrl: "app/components/dashboard/game-presence.html",
@@ -76,9 +82,9 @@ angular
             },
             controllerAs: "presenceCtrl"
         }
-    }])
+    }]);
 
-    .directive('playersSummary', function(){
+    app.directive('playersSummary', function(){
         return {
             restrict: "E",
             templateUrl: "app/components/dashboard/players-summary.html",
@@ -90,11 +96,13 @@ angular
             },
             controllerAs: 'summaryCtrl'
         }
-    })
+    });
 
-    .directive('gameInfo', function(){
+    app.directive('gameInfo', function(){
         return {
             restrict: "E",
             templateUrl: "app/components/dashboard/game-info.html"
         }
     });
+
+})();

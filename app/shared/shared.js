@@ -1,8 +1,8 @@
-angular
+(function (){
 
-    .module('app')
+    var app = angular.module('shared.components', []);
 
-    .controller('HeaderCtrl', ['$location', 'authService', function($location, authService) {
+    app.controller('HeaderCtrl', ['$location', 'authService', function($location, authService) {
         this.isPageActive = function (viewLocation) {
             return viewLocation === $location.path();
         };
@@ -12,3 +12,5 @@ angular
         }
 
     }]);
+
+})();

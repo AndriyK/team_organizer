@@ -1,8 +1,54 @@
-angular
+(function (){
 
-    .module('app')
+    var app = angular.module('teams', []);
 
-    .directive('playerTeams', ['teamsService', function(teamsService){
+    app.service('teamsService', ['$http', 'API_URL', 'authService',function($http, API_URL, authService){
+
+        var self = this;
+
+        self.getTeams = function() {
+            return $http.get(API_URL + '/players/' + authService.getPlayerId() + '?expand=teams');
+        }
+
+        // GET /teams/search?name=<name>&email=<mail>
+        self.find = function (name, mail) {
+            return $http.get(API_URL + '/teams/search?name='+name+'&email='+mail);
+        }
+
+        self.createTeam = function (teamName, teamSport) {
+            return $http.post(API_URL + '/teams', {name: teamName, sport: teamSport});
+        }
+
+        self.updateTeam = function (teamId, data) {
+            return $http.put(API_URL + '/teams/'+teamId, data);
+        }
+
+        self.joinPlayer = function (teamId, mail) {
+            return self.updateTeam(teamId, {join_player: mail});
+        }
+
+        self.removePlayer = function (teamId, mail) {
+            return self.updateTeam(teamId, {remove_player: mail});
+        }
+
+        self.renameTeam = function (teamId, newName) {
+            return self.updateTeam(teamId, {name: newName});
+        }
+
+        self.leaveTeam = function (teamId) {
+            return self.removePlayer(teamId, authService.getPlayerMail());
+        }
+
+        self.joinToTeam = function (teamId) {
+            return self.joinPlayer(teamId, authService.getPlayerMail());
+        }
+
+        self.removeTeam = function (teamId) {
+            return $http.delete(API_URL + '/teams/'+teamId);
+        }
+    }]);
+
+    app.directive('playerTeams', ['teamsService', function(teamsService){
         return {
             restrict: "E",
             templateUrl: "app/components/teams/player-teams.html",
@@ -33,16 +79,16 @@ angular
             }],
             controllerAs: "teamsCtrl"
         }
-    }])
+    }]);
 
-    .directive('teamHeading', function(){
+    app.directive('teamHeading', function(){
         return {
             restrict: "E",
             templateUrl: "app/components/teams/team-heading.html"
         }
-    })
+    });
 
-    .directive('teamPlayers', ['teamsService', function(teamsService){
+    app.directive('teamPlayers', ['teamsService', function(teamsService){
         return {
             restrict: "E",
             templateUrl: "app/components/teams/team-players.html",
@@ -57,9 +103,9 @@ angular
             }],
             controllerAs: "playersCtrl"
         }
-    }])
+    }]);
 
-    .directive('teamManagement', ['teamsService', function(teamsService){
+    app.directive('teamManagement', ['teamsService', function(teamsService){
         return {
             restrict: "E",
             templateUrl: "app/components/teams/team-management.html",
@@ -122,9 +168,9 @@ angular
             }],
             controllerAs: "teamManage"
         }
-    }])
+    }]);
 
-    .directive('newTeamManagement', function(){
+    app.directive('newTeamManagement', function(){
         return {
             restrict: "E",
             templateUrl: "app/components/teams/new-team-management.html",
@@ -143,9 +189,9 @@ angular
                 };
             }],
         }
-    })
+    });
 
-    .directive('newTeamCreate', ['teamsService', function(teamsService){
+    app.directive('newTeamCreate', ['teamsService', function(teamsService){
         return {
             restrict: "E",
             templateUrl: "app/components/teams/new-team-create.html",
@@ -161,9 +207,9 @@ angular
             }],
             controllerAs: 'createTeam'
         }
-    }])
+    }]);
 
-    .directive('newTeamFind', ['teamsService', function(teamsService){
+    app.directive('newTeamFind', ['teamsService', function(teamsService){
         return {
             restrict: "E",
             templateUrl: "app/components/teams/new-team-find.html",
@@ -205,3 +251,5 @@ angular
             controllerAs: 'findTeam'
         }
     }]);
+
+})();
