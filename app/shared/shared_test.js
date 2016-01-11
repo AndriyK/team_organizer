@@ -1,6 +1,6 @@
 'use strict';
 
-describe('app.shared.header', function() {
+describe('app.shared', function() {
 
     beforeEach(module('app'));
 
