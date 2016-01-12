@@ -8,7 +8,6 @@ module.exports = function(config){
             'assets/libs/angular/angular_route_1.4.js',
             'assets/libs/angular/angular_mock_1.4.js',
             'assets/libs/angular/ui-bootstrap.js',
-            'app/app.js',
             'app/*.js',
             'app/shared/*.js',
             'app/components/register/*.js',
