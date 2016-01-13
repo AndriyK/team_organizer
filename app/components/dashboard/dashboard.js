@@ -34,7 +34,7 @@
                     }
 
                     var now = new Date();
-                    var gameDate = new Date(value.date);
+                    var gameDate = new Date(value.date.replace(' ', 'T'));
                     var tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate()+self.filterDaysAmount);
                     return gameDate < tomorrow;
                 }
