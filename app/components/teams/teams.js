@@ -100,6 +100,18 @@
                             $scope.updateTeamPlayers(teamId, data.players)
                         });
                 }
+
+                self.showRemovePlayerLink = function(team, player) {
+                    if(player.is_capitan == "1"){
+                        return false;
+                    }
+
+                    if(team.is_capitan == "1"){
+                        return true;
+                    }
+
+                    return false;
+                }
             }],
             controllerAs: "playersCtrl"
         }
