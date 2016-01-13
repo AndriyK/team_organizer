@@ -9,6 +9,7 @@ describe('app', function() {
 
     describe('factory.authInterceptor', function(){
         var authInterceptor, API_URL, authService, $location, $window;
+        var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3QiLCJhdWQiOiJodHRwOlwvXC9sb2NhbGhvc3QiLCJpYXQiOjE0NTI1MDM4ODksImV4cCI6MTQ1MzEwODY4OSwidWlkIjozMywibWFpbCI6InFAcS5xIn0.chn6C_ItxSWY0Y3n82M7RrxpppQiONJKYygeEybt7_g"
 
         beforeEach(inject(function(_authInterceptor_, _API_URL_, _authService_, _$location_, _$window_){
             authInterceptor = _authInterceptor_;
@@ -28,6 +29,10 @@ describe('app', function() {
 
         describe('request interceptor', function (){
 
+            beforeEach(function(){
+                authService.logout();
+            });
+
             it('should have a handler for request', function () {
                 expect(angular.isFunction(authInterceptor.request)).toBe(true);
             });
@@ -42,8 +47,6 @@ describe('app', function() {
             });
 
             it('should add auth header when it is set', function () {
-                var token = 'security_token';
-
                 authService.saveToken(token);
 
                 var init_config = {
@@ -55,7 +58,7 @@ describe('app', function() {
             });
 
             it('should not add auth header when request is sent to not api url', function () {
-                authService.saveToken('security_token');
+                authService.saveToken(token);
                 var init_config = {
                     'url': 'wrong_url',
                     'headers': {}
@@ -74,11 +77,11 @@ describe('app', function() {
             it('should save security token from response data', function () {
                 var response = {
                     'config': {'url': API_URL},
-                    'data': {'token': 'security_token_body'},
+                    'data': {'token': token},
                     'headers': function (key){}
                 }
                 authInterceptor.response(response);
-                expect(authService.getToken()).toBe('security_token_body');
+                expect(authService.getToken()).toBe(token);
             });
 
             it('should save security token from response headers', function () {
@@ -87,12 +90,12 @@ describe('app', function() {
                     'data': {},
                     'headers': function (key){
                         if(key == 'X-Token'){
-                            return 'security_token_headers';
+                            return token;
                         }
                     }
                 }
                 authInterceptor.response(response);
-                expect(authService.getToken()).toBe('security_token_headers');
+                expect(authService.getToken()).toBe(token);
             });
 
             it('should save security token from response only for API URL', function () {

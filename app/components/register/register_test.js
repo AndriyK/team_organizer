@@ -30,20 +30,20 @@ describe('app.components.register', function() {
         });
 
         it('should return token for newly created user and redirect to teams page', function() {
-
+            var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3QiLCJhdWQiOiJodHRwOlwvXC9sb2NhbGhvc3QiLCJpYXQiOjE0NTI1MDM4ODksImV4cCI6MTQ1MzEwODY4OSwidWlkIjozMywibWFpbCI6InFAcS5xIn0.chn6C_ItxSWY0Y3n82M7RrxpppQiONJKYygeEybt7_g"
             var userData = {"email":"some@mail.com", "password":"pass", "password_repeat":"pass", "name":"Player"};
 
             $scope.player = userData;
 
             $httpBackend
                 .expectPOST(API_URL + '/players', userData)
-                .respond({"token": "security_token_for_newly_created_user"});
+                .respond({"token": token});
 
             $scope.register();
 
             $httpBackend.flush();
 
-            expect(authService.getToken()).toEqual("security_token_for_newly_created_user");
+            expect(authService.getToken()).toEqual(token);
             expect($location.path()).toEqual("/teams");
         });
 
@@ -93,20 +93,20 @@ describe('app.components.register', function() {
         });
 
         it('should return token for correct credentials', function() {
-
+            var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3QiLCJhdWQiOiJodHRwOlwvXC9sb2NhbGhvc3QiLCJpYXQiOjE0NTI1MDM4ODksImV4cCI6MTQ1MzEwODY4OSwidWlkIjozMywibWFpbCI6InFAcS5xIn0.chn6C_ItxSWY0Y3n82M7RrxpppQiONJKYygeEybt7_g"
             var userData = {"email":"correct@mail.com", "password":"pass"};
 
             $scope.user = userData;
 
             $httpBackend
                 .expectPOST(API_URL + '/auth/login', userData)
-                .respond({"token": "security_token"});
+                .respond({"token": token});
 
             $scope.login();
 
             $httpBackend.flush();
 
-            expect(authService.getToken()).toEqual("security_token");
+            expect(authService.getToken()).toEqual(token);
             expect($location.path()).toEqual("/dashboard");
         });
 

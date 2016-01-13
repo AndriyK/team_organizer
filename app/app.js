@@ -106,6 +106,7 @@
 
         self.saveToken = function(token) {
             $window.localStorage['token'] = token;
+            self.parseToken(token);
         }
 
         self.getToken = function() {
