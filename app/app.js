@@ -184,11 +184,13 @@
             $location.path("/login").replace();
         }
     }
+    checkPersmission.$inject = ['$location', 'authService'];
 
     function checkIsGuest($location, authService){
         if(authService.isAuthed()) {
             $location.path("/dashboard").replace();
         }
     }
+    checkIsGuest.$inject = ['$location', 'authService'];
 
 })();
