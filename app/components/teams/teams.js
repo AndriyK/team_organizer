@@ -48,35 +48,30 @@
         }
     }]);
 
+    app.controller('TeamsController', ['$scope', 'teamsService', function($scope, teamsService){
+        $scope.teams = [];
+
+        teamsService.getTeams()
+            .success(function(data){
+                $scope.teams = data.teams;
+            });
+
+        $scope.updateTeamPlayers = function (teamId, players) {
+            for(var i= 0, n = $scope.teams.length; i < n; i++){
+                if($scope.teams[i].id == teamId) {
+                    $scope.teams[i].players = players;
+                    break;
+                }
+            }
+        };
+    }]);
+
     app.directive('playerTeams', ['teamsService', function(teamsService){
         return {
             restrict: "E",
             templateUrl: "app/components/teams/player-teams.html",
             scope: {},
-            controller:['$scope', function ($scope){
-                $scope.teams = [];
-
-                $scope.selectTeams = function (){
-                    teamsService.getTeams()
-                        .success(function(data){
-                            $scope.teams = data.teams;
-                        });
-                };
-
-                $scope.selectTeams();
-
-                $scope.updateTeamPlayers = function (teamId, players) {
-                    for(var i= 0, n = $scope.teams.length; i < n; i++){
-                        if($scope.teams[i].id == teamId) {
-                            $scope.teams[i].players = players;
-                        }
-                    }
-                };
-
-                this.getTeams = function (){
-                    return $scope.teams;
-                }
-            }],
+            controller:'TeamsController',
             controllerAs: "teamsCtrl"
         }
     }]);
@@ -88,99 +83,106 @@
         }
     });
 
-    app.directive('teamPlayers', ['teamsService', function(teamsService){
+    app.controller('PlayersController', ['$scope', 'teamsService', function ($scope, teamsService) {
+        var self = this;
+
+        self.removePlayer = function (teamId, mail) {
+            teamsService.removePlayer(teamId, mail)
+                .success(function(data){
+                    $scope.updateTeamPlayers(teamId, data.players)
+                });
+        }
+
+        self.showRemovePlayerLink = function(team, player) {
+            if(player.is_capitan == "1"){
+                return false;
+            }
+
+            if(team.is_capitan == "1"){
+                return true;
+            }
+
+            return false;
+        }
+    }]);
+
+    app.directive('teamPlayers', function(){
         return {
             restrict: "E",
             templateUrl: "app/components/teams/team-players.html",
-            controller: ['$scope', function ($scope) {
-                var self = this;
-                self.removePlayer = function (teamId, mail) {
-                    teamsService.removePlayer(teamId, mail)
-                        .success(function(data){
-                            $scope.updateTeamPlayers(teamId, data.players)
-                        });
-                }
-
-                self.showRemovePlayerLink = function(team, player) {
-                    if(player.is_capitan == "1"){
-                        return false;
-                    }
-
-                    if(team.is_capitan == "1"){
-                        return true;
-                    }
-
-                    return false;
-                }
-            }],
+            controller: 'PlayersController',
             controllerAs: "playersCtrl"
         }
+    });
+
+    app.controller('TeamManagementController', ['$scope', '$window', 'teamsService',function ($scope, $window, teamsService) {
+        var self = this;
+
+        self.newPlayerMail = '';
+
+        self.removeTeam = function (team) {
+            if(!$window.confirm('Please confirm team removal?')){
+                return;
+            }
+
+            teamsService.removeTeam(team.id)
+                .success(function(){
+                    var index = $scope.teams.indexOf(team);
+                    $scope.teams.splice(index, 1);
+                });
+        }
+
+        self.renameTeam = function (teamId) {
+            var newName = prompt('Please enter new name:', '');
+            if(!newName){
+                return;
+            }
+
+            teamsService.renameTeam(teamId, newName)
+                .success(function(){
+                    for(var i= 0, n = $scope.teams.length; i < n; i++){
+                        if($scope.teams[i].id == teamId) {
+                            $scope.teams[i].name = newName;
+                            break;
+                        }
+                    }
+                });
+        }
+
+        self.joinPlayer = function (teamId) {
+            if(!self.newPlayerMail) {
+                return;
+            }
+            teamsService.joinPlayer(teamId, self.newPlayerMail)
+                .success(function(data){
+                    self.newPlayerMail = '';
+                    $scope.updateTeamPlayers(teamId, data.players);
+                });
+        }
+
+        self.leaveTeam = function (teamId) {
+            teamsService.leaveTeam(teamId)
+                .success(function(data){
+                    var teams = $scope.teams;
+                    for(var i= 0, n = teams.length; i < n; i++){
+                        if(teams[i].id == teamId) {
+                            teams.splice(i, 1);
+                        }
+                    }
+                    $scope.teams = teams;
+                });
+        }
+
     }]);
 
-    app.directive('teamManagement', ['teamsService', function(teamsService){
+    app.directive('teamManagement', function(){
         return {
             restrict: "E",
             templateUrl: "app/components/teams/team-management.html",
-            controller: ['$scope', function ($scope) {
-                var self = this;
-
-                self.newPlayerMail = '';
-
-                self.removeTeam = function (teamId) {
-                    if(!confirm('Please confirm team removal?')){
-                        return;
-                    }
-
-                    teamsService.removeTeam(teamId)
-                        .success(function(){
-                            $scope.selectTeams();
-                        });
-                }
-
-                self.renameTeam = function (teamId) {
-                    var newName = prompt('Please enter new name:', '');
-                    if(!newName){
-                        return;
-                    }
-
-                    teamsService.renameTeam(teamId, newName)
-                        .success(function(){
-                            for(var i= 0, n = $scope.teams.length; i < n; i++){
-                                if($scope.teams[i].id == teamId) {
-                                    $scope.teams[i].name = newName;
-                                }
-                            }
-                        });
-                }
-
-                self.joinPlayer = function (teamId) {
-                    if(!self.newPlayerMail) {
-                        return;
-                    }
-                    teamsService.joinPlayer(teamId, self.newPlayerMail)
-                        .success(function(data){
-                            self.newPlayerMail = '';
-                            $scope.updateTeamPlayers(teamId, data.players);
-                        });
-                }
-
-                self.leaveTeam = function (teamId) {
-                    teamsService.leaveTeam(teamId)
-                        .success(function(data){
-                            var teams = $scope.teams;
-                            for(var i= 0, n = teams.length; i < n; i++){
-                                if(teams[i].id == teamId) {
-                                    teams.splice(i, 1);
-                                }
-                            }
-                            $scope.teams = teams;
-                        });
-                }
-
-            }],
+            controller: 'TeamManagementController',
             controllerAs: "teamManage"
         }
-    }]);
+    });
 
     app.directive('newTeamManagement', function(){
         return {
