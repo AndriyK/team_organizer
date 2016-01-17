@@ -260,9 +260,180 @@ describe('teams', function() {
                     expect($scope.teams.length).toEqual(2);
                 });
 
-            });
-        });
+                it('should not rename team when empty name was entered', function () {
+                    spyOn(window, 'prompt').and.callFake(function () {
+                        return '';
+                    });
 
+                    controller.renameTeam(25);
+
+                    expect($scope.teams[0].name).toEqual('Real');
+                });
+
+                it('should rename team when correct name was entered', function () {
+                    spyOn(window, 'prompt').and.callFake(function () {
+                        return 'Bavaria';
+                    });
+
+                    $httpBackend
+                        .expectPUT(API_URL + '/teams/25', {name: 'Bavaria'})
+                        .respond({});
+
+                    controller.renameTeam(25);
+
+                    $httpBackend.flush();
+                    expect($scope.teams[0].name).toEqual('Bavaria');
+                });
+
+                it('should join player to the team', function(){
+                    controller.newPlayerMail = 'r@r.r';
+
+                    $httpBackend
+                        .expectPUT(API_URL + '/teams/25', {join_player: 'r@r.r'})
+                        .respond({});
+
+                    controller.joinPlayer(25);
+
+                    $httpBackend.flush();
+                });
+
+                it('should remove player from the team', function(){
+
+                    $httpBackend
+                        .expectPUT(API_URL + '/teams/25', {remove_player: 'q@q.q'})
+                        .respond({});
+
+                    controller.leaveTeam($scope.teams[0]);
+
+                    $httpBackend.flush();
+                    expect($scope.teams.length).toEqual(1);
+                });
+
+            });
+
+            describe('NewTeamManagementController', function (){
+                var controller;
+
+                beforeEach(function () {
+                    controller = $controller('NewTeamManagementController', {$scope: $scope});
+                });
+
+                it('should be defined new team management controller', function () {
+                    expect(controller).toBeDefined();
+                });
+
+                it('should have falsy initial values', function () {
+                    expect($scope.showCreateTeamForm).toBeFalsy();
+                    expect($scope.showFindTeamForm).toBeFalsy();
+                });
+
+                it('should enable corresponding form showing', function () {
+                    $scope.showNewTeamForm('create');
+                    expect($scope.showCreateTeamForm).toBeTruthy();
+                    expect($scope.showFindTeamForm).toBeFalsy();
+
+                    $scope.showNewTeamForm('find');
+                    expect($scope.showCreateTeamForm).toBeFalsy();
+                    expect($scope.showFindTeamForm).toBeTruthy();
+                });
+
+                it('should hide new team forms', function () {
+                    $scope.hideNewTeamForms();
+                    expect($scope.showCreateTeamForm).toBeFalsy();
+                    expect($scope.showFindTeamForm).toBeFalsy();
+                });
+
+                describe('NewTeamCreateController', function (){
+                    var controller;
+
+                    beforeEach(function () {
+                        controller = $controller('NewTeamCreateController', {$scope: $scope}, teamsService);
+                    });
+
+                    it('should be defined new team management controller', function () {
+                        expect(controller).toBeDefined();
+                    });
+
+                    it('should create new team', function () {
+                        controller.teamNew['name'] = 'New name';
+
+                        $httpBackend
+                            .expectPOST(API_URL + '/teams', {name:'New name', sport: 'football'})
+                            .respond({id:12, name:'New name'});
+
+                        controller.create();
+
+                        $httpBackend.flush();
+
+                        expect($scope.teams.length).toEqual(3);
+                    });
+                });
+
+                describe('NewTeamFindController', function (){
+                    var controller, $filter;
+
+                    beforeEach(inject(function (_$filter_) {
+                        $filter = _$filter_;
+                    }));
+
+                    beforeEach(function () {
+                        controller = $controller('NewTeamFindController', {$scope: $scope}, $filter, authService, teamsService);
+                    });
+
+                    it('should be defined new team management controller', function () {
+                        expect(controller).toBeDefined();
+                    });
+
+                    it('should find teams', function () {
+                        controller.search = {name:'team', mail:'r@r.r'};
+
+                        $httpBackend
+                            .expectGET(API_URL + '/teams/search?name=team&email=r@r.r')
+                            .respond([{id:1,name:'team1',players:[]},{id:2,name:'team2',players:[]}]);
+
+                        controller.find();
+
+                        $httpBackend.flush();
+
+                        expect(controller.foundTeams.length).toEqual(2);
+                        expect(controller.showNotFound).toBeFalsy();
+                    });
+
+                    it('should not find teams for wrong criterias', function () {
+                        controller.search = {name:'wrong', mail:''};
+
+                        $httpBackend
+                            .expectGET(API_URL + '/teams/search?name=wrong&email=')
+                            .respond([]);
+
+                        controller.find();
+
+                        $httpBackend.flush();
+
+                        expect(controller.foundTeams.length).toEqual(0);
+                        expect(controller.showNotFound).toBeTruthy();
+                    });
+
+                    it('should join player to the team', function () {
+                        controller.foundTeams = [{id:1},{id:5}];
+
+                        $httpBackend
+                            .expectPUT(API_URL + '/teams/5', {join_player:'q@q.q'})
+                            .respond({});
+
+                        controller.joinToTeam(5);
+
+                        $httpBackend.flush();
+
+                        expect($scope.teams.length).toEqual(3);
+                        expect(controller.foundTeams.length).toEqual(0);
+                    });
+                })
+            });
+
+
+
+        });
 
     });
 

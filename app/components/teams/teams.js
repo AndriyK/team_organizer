@@ -133,7 +133,7 @@
         }
 
         self.renameTeam = function (teamId) {
-            var newName = prompt('Please enter new name:', '');
+            var newName = $window.prompt('Please enter new name:', '');
             if(!newName){
                 return;
             }
@@ -160,16 +160,11 @@
                 });
         }
 
-        self.leaveTeam = function (teamId) {
-            teamsService.leaveTeam(teamId)
-                .success(function(data){
-                    var teams = $scope.teams;
-                    for(var i= 0, n = teams.length; i < n; i++){
-                        if(teams[i].id == teamId) {
-                            teams.splice(i, 1);
-                        }
-                    }
-                    $scope.teams = teams;
+        self.leaveTeam = function (team) {
+            teamsService.leaveTeam(team.id)
+                .success(function(){
+                    var index = $scope.teams.indexOf(team);
+                    $scope.teams.splice(index, 1);
                 });
         }
 
@@ -184,86 +179,97 @@
         }
     });
 
+    app.controller('NewTeamManagementController', ['$scope', function ($scope) {
+        $scope.showNewTeamForm = function (form){
+            $scope.hideNewTeamForms();
+            if(form == 'create') {
+                $scope.showCreateTeamForm = true;
+            } else if(form == 'find'){
+                $scope.showFindTeamForm = true;
+            }
+        };
+
+        $scope.hideNewTeamForms = function(){
+            $scope.showCreateTeamForm = $scope.showFindTeamForm = false;
+        };
+    }]);
+
     app.directive('newTeamManagement', function(){
         return {
             restrict: "E",
             templateUrl: "app/components/teams/new-team-management.html",
-            controller: ['$scope', function ($scope) {
-                $scope.showNewTeamForm = function (form){
-                    $scope.hideNewTeamForms();
-                    if(form == 'create') {
-                        $scope.showCreateTeamForm = true;
-                    } else if(form == 'find'){
-                        $scope.showFindTeamForm = true;
-                    }
-                };
-
-                $scope.hideNewTeamForms = function(){
-                    $scope.showCreateTeamForm = $scope.showFindTeamForm = false;
-                };
-            }],
+            controller: 'NewTeamManagementController'
         }
     });
 
-    app.directive('newTeamCreate', ['teamsService', function(teamsService){
+    app.controller('NewTeamCreateController', ['$scope', 'teamsService', function ($scope, teamsService) {
+        var self = this;
+        self.teamNew = {sport: 'football'};
+        self.create = function () {
+            teamsService.createTeam(self.teamNew.name, self.teamNew.sport)
+                .success(function(data){
+                    data.is_capitan = 1;
+                    $scope.teams.push(data);
+                    $scope.hideNewTeamForms();
+                });
+        }
+    }]);
+
+    app.directive('newTeamCreate', function(){
         return {
             restrict: "E",
             templateUrl: "app/components/teams/new-team-create.html",
-            controller: ['$route', function ($route) {
-                var self = this;
-                self.teamNew = {sport: 'football'};
-                self.create = function () {
-                    teamsService.createTeam(self.teamNew.name, self.teamNew.sport)
-                        .success(function(data){
-                            $route.reload();
-                        });
-                }
-            }],
+            controller: 'NewTeamCreateController',
             controllerAs: 'createTeam'
+        }
+    });
+
+    app.controller('NewTeamFindController', ['$scope', '$filter', 'authService', 'teamsService', function ($scope, $filter, authService, teamsService) {
+        var self = this;
+
+        self.search = {};
+        self.showNotFound = false;
+        var playerId = authService.getPlayerId();
+
+        self.find = function () {
+            self.showNotFound = false;
+            self.foundTeams = [];
+
+            var name = self.search.name || "";
+            var mail = self.search.mail || "";
+
+            teamsService.find(name, mail)
+                .success(function(data){
+                    self.foundTeams = $filter('filter')(data, function(team){
+                        return !team.players.some(function(player){
+                            return player.id == playerId;
+                        });
+                    });
+                    self.showNotFound = !!!self.foundTeams.length;
+                })
+                .error(function(data){
+                    self.showNotFound = true;
+                });
+        };
+
+        self.joinToTeam = function (teamId) {
+            teamsService.joinToTeam(teamId)
+                .success(function(data){
+                    data.is_capitan = 0;
+                    $scope.teams.push(data);
+                    $scope.hideNewTeamForms();
+                    self.foundTeams = [];
+                });
         }
     }]);
 
-    app.directive('newTeamFind', ['teamsService', function(teamsService){
+    app.directive('newTeamFind', function(){
         return {
             restrict: "E",
             templateUrl: "app/components/teams/new-team-find.html",
-            controller: ['$route', '$filter', 'authService', function ($route, $filter, authService) {
-                var self = this;
-
-                self.search = {};
-                self.showNotFound = false;
-                self.playerId = authService.getPlayerId();
-
-                self.find = function () {
-                    self.showNotFound = false;
-                    self.foundTeams = [];
-
-                    var name = self.search.name || "";
-                    var mail = self.search.mail || "";
-
-                    teamsService.find(name, mail)
-                        .success(function(data){
-                            self.foundTeams = $filter('filter')(data, function(team){
-                                return !team.players.some(function(player){
-                                    return player.id == self.playerId;
-                                });
-                            });
-                            self.showNotFound = !!!self.foundTeams.length;
-                        })
-                        .error(function(data){
-                            self.showNotFound = true;
-                        });
-                };
-
-                self.joinToTeam = function (teamId) {
-                    teamsService.joinToTeam(teamId)
-                        .success(function(data){
-                            $route.reload();
-                        });
-                }
-            }],
+            controller: 'NewTeamFindController',
             controllerAs: 'findTeam'
         }
-    }]);
+    });
 
 })();
