@@ -35,6 +35,107 @@
         }
     }]);
 
+    app.controller('GamesController', ['$scope', 'gamesService', 'teamsService', function ($scope, gamesService, teamsService) {
+        var self = this;
+
+        $scope.teams = {};
+        $scope.newGame = {};
+        $scope.playerGames = {};
+
+        teamsService.getTeams()
+            .success(function (data){
+                $scope.teams = data.teams.reduce(function(obj, curItem){
+                    obj[curItem.id] = curItem;
+                    return obj;
+                }, {});
+                loadGames();
+                loadPlayerGames();
+            });
+
+        function loadGames() {
+            for(var teamId in $scope.teams){
+                (function (teamId){
+                    gamesService.getTeamGames(teamId)
+                        .success(function(data){
+                            $scope.teams[teamId].games = data.games;
+                        });
+                })(teamId);
+            }
+        }
+
+        function loadPlayerGames(){
+            gamesService.getPlayerGames()
+                .success(function(data){
+                    $scope.playerGames = data.games.reduce(function(obj, curItem){
+                        var gameDate = new Date( curItem.datetime.replace(' ', 'T'));
+                        var curDate = new Date();
+                        if(gameDate > curDate){
+                            obj[curItem.id] = curItem;
+                        }
+                        return obj;
+                    }, {});
+                });
+        }
+
+        self.removeGame = function (gameId, teamId){
+            gamesService.removeGame(gameId)
+                .success(function (data){
+                    $scope.alert = {message: 'Game has been removed.'};
+                    $scope.teams[teamId].games = $scope.teams[teamId].games.filter(function(item){
+                        return item.id != gameId;
+                    });
+                });
+        }
+
+        self.getUserPresenceOnGame = function (gameId) {
+            if(!$scope.playerGames[gameId]) {
+                return '';
+            }
+
+            return ($scope.playerGames[gameId].presence) == 1 ? 'joined' : 'rejected';
+        }
+
+        self.setGamePresence = function (gameId, presence) {
+            var methodName = presence == 1 ? gamesService.joinGame : gamesService.rejectGame;
+            methodName(gameId)
+                .success(function(data){
+                    data.presence = presence;
+                    $scope.playerGames[data.id] = data;
+                });
+        }
+
+        self.showNewGameForm = function (teamId){
+            $scope.clearTempData();
+
+            $scope.newGame.showForm = true;
+            $scope.newGame.teamId = teamId;
+        }
+
+        $scope.clearTempData = function () {
+            $scope.alert = {};
+
+            $scope.newGame.showForm = false;
+            $scope.newGame.teamId = 0;
+            $scope.newGame.location = '';
+            $scope.newGame.description = '';
+
+            var dt = new Date();
+            dt.setMinutes(0);
+            dt.setHours(dt.getHours() + 2);
+            $scope.newGame.date = dt;
+        }
+    }]);
+
+    app.directive('teamsGames', function(){
+        return {
+            restrict: "E",
+            templateUrl: "app/components/games/teams-games.html",
+            scope: {},
+            controller: 'GamesController',
+            controllerAs: 'gamesCtrl'
+        }
+    });
+
     app.directive('newGameForm', function(){
         return {
             restrict: "E",
@@ -96,104 +197,6 @@
         }
     });
 
-    app.directive('teamsGames', function(){
-        return {
-            restrict: "E",
-            templateUrl: "app/components/games/teams-games.html",
-            scope: {},
-            controller: ['$scope', 'gamesService', 'teamsService', function ($scope, gamesService, teamsService) {
-                var self = this;
 
-                $scope.teams = {};
-                $scope.newGame = {};
-                $scope.playerGames = {};
-
-                teamsService.getTeams()
-                    .success(function (data){
-                        $scope.teams = data.teams.reduce(function(obj, curItem){
-                            obj[curItem.id] = curItem;
-                            return obj;
-                        }, {});
-                        self.loadGames();
-                        self.loadPlayerGames();
-                    });
-
-                self.loadGames = function () {
-                    for(var teamId in $scope.teams){
-                        (function (teamId){
-                            gamesService.getTeamGames(teamId)
-                                .success(function(data){
-                                    $scope.teams[teamId].games = data.games;
-                                });
-                        })(teamId);
-                    }
-                }
-
-                self.loadPlayerGames = function (){
-                    gamesService.getPlayerGames()
-                        .success(function(data){
-                            $scope.playerGames = data.games.reduce(function(obj, curItem){
-                                var gameDate = new Date( curItem.datetime.replace(' ', 'T'));
-                                var curDate = new Date();
-                                if(gameDate > curDate){
-                                    obj[curItem.id] = curItem;
-                                }
-                                return obj;
-                            }, {});
-                        });
-                }
-
-                self.removeGame = function (gameId, teamId){
-                    gamesService.removeGame(gameId)
-                        .success(function (data){
-                            $scope.alert = {message: 'Game has been removed.'};
-                            $scope.teams[teamId].games = $scope.teams[teamId].games.filter(function(item){
-                                return item.id != gameId;
-                            });
-                        });
-                }
-
-                self.getUserPresenceOnGame = function (gameId) {
-                    if(!$scope.playerGames[gameId]) {
-                        return '';
-                    }
-
-                    return ($scope.playerGames[gameId].presence) == 1 ? 'joined' : 'rejected';
-                }
-
-                self.setGamePresence = function (gameId, presence) {
-                    var methodName = presence == 1 ? gamesService.joinGame : gamesService.rejectGame;
-                    methodName(gameId)
-                        .success(function(data){
-                            data.presence = presence;
-                            $scope.playerGames[data.id] = data;
-                        });
-                }
-
-                self.showNewGameForm = function (teamId){
-                    $scope.clearTempData();
-
-                    $scope.newGame.showForm = true;
-                    $scope.newGame.teamId = teamId;
-                }
-
-                $scope.clearTempData = function () {
-                    $scope.alert = {};
-
-                    $scope.newGame.showForm = false;
-                    $scope.newGame.teamId = 0;
-                    $scope.newGame.location = '';
-                    $scope.newGame.description = '';
-
-                    var dt = new Date();
-                    dt.setMinutes(0);
-                    dt.setHours(dt.getHours() + 2);
-                    $scope.newGame.date = dt;
-
-                }
-            }],
-            controllerAs: 'gamesCtrl'
-        }
-    });
 
 })();
