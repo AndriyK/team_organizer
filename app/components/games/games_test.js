@@ -235,6 +235,61 @@ describe('games', function() {
                 expect($scope.newGame.description).toEqual('');
                 expect($scope.newGame.date).toBeDefined();
             });
+
+            describe('NewGameFormController', function (){
+                var $filter;
+
+                beforeEach(inject(function(_$filter_){
+                    $filter = _$filter_;
+                }));
+
+                beforeEach(function () {
+                    controller = $controller('NewGameFormController', {$scope: $scope}, $filter, gamesService);
+                });
+
+                it('should be defined new game form controller', function () {
+                    expect(controller).toBeDefined();
+                });
+
+                it('should add new game', function (){
+                    var gameDate = new Date();
+                    gameDate.setHours(gameDate.getHours()+4);
+
+                    var dateStr = $filter('date')(gameDate, 'yyyy-MM-dd hh-mm-00');
+
+                    $scope.newGame.teamId = 25;
+                    $scope.newGame.date = gameDate;
+                    $scope.newGame.location = 'stadium';
+                    $scope.newGame.description = 'training';
+
+                    $httpBackend
+                        .expectPOST(API_URL + '/games', {
+                            team_id: 25,
+                            datetime: dateStr,
+                            location: 'stadium',
+                            title: 'training'
+                        })
+                        .respond({id:100});
+
+                    controller.add();
+
+                    $httpBackend.flush();
+
+                    expect($scope.teams[25].games.length).toEqual(4);
+                    expect($scope.alert.message).toEqual('Game has been added.');
+                });
+
+                it('should not add new game when date is wrong', function (){
+                    $scope.newGame.teamId = 25;
+                    $scope.newGame.date = new Date();
+                    $scope.newGame.location = 'stadium';
+                    $scope.newGame.description = 'training';
+
+                    controller.add();
+
+                    expect($scope.alert.message).toEqual('Please enter future date time for game.');
+                });
+            });
         });
     });
 

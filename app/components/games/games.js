@@ -136,37 +136,29 @@
         }
     });
 
+    app.controller('NewGameFormController', ['$scope', '$filter', 'gamesService', function ($scope, $filter, gamesService) {
+        var self = this;
+
+        self.add = function () {
+            if($scope.newGame.date <= new Date()){
+                $scope.alert = {message: 'Please enter future date time for game.', level:'danger'};
+                return;
+            }
+
+            gamesService.addGame($scope.newGame.teamId, $filter('date')($scope.newGame.date, 'yyyy-MM-dd hh-mm-00'), $scope.newGame.location, $scope.newGame.description || 'Training')
+                .success(function (data){
+                    $scope.teams[$scope.newGame.teamId].games.push(data);
+                    $scope.clearTempData();
+                    $scope.alert = {message: 'Game has been added.'};
+                });
+        }
+    }]);
+
     app.directive('newGameForm', function(){
         return {
             restrict: "E",
             templateUrl: "app/components/games/new-game-form.html",
-            controller: ['$scope', 'gamesService', function ($scope, gamesService) {
-                var self = this;
-
-                self.add = function () {
-                    if($scope.newGame.date < new Date()){
-                        $scope.alert = {message: 'Please enter future date time for game.', level:'danger'};
-                        return;
-                    }
-
-                    gamesService.addGame($scope.newGame.teamId, formatDateTime($scope.newGame.date), $scope.newGame.location, $scope.newGame.description || 'Training')
-                        .success(function (data){
-                            $scope.teams[$scope.newGame.teamId].games.push(data);
-                            $scope.clearTempData();
-                            $scope.alert = {message: 'Game has been added.'};
-                        });
-                }
-
-                function formatDateTime(date){
-                    return date.getFullYear() + "-" + twoDigits(1 + date.getMonth()) + "-" + twoDigits(date.getDate())
-                        + " " + twoDigits(date.getHours()) + ":" + twoDigits(date.getMinutes()) + ":00";
-                }
-                function twoDigits(d) {
-                    if(0 <= d && d < 10) return "0" + d;
-                    return d;
-                }
-
-            }],
+            controller: 'NewGameFormController',
             controllerAs: 'formCtrl'
         }
     });
@@ -196,7 +188,5 @@
             controllerAs: 'pickerCtrl'
         }
     });
-
-
 
 })();
