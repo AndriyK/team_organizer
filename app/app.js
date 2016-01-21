@@ -60,9 +60,12 @@
         return {
             // automatically attach Authorization header
             request: function(config) {
-                var token = authService.getToken();
-                if(config.url.indexOf(API_URL) === 0 && token) {
-                    config.headers.Authorization = 'Bearer ' + token;
+
+                if(config.url.indexOf(API_URL) === 0) {
+                    var token = authService.getToken();
+                    if(token) {
+                        config.headers.Authorization = 'Bearer ' + token;
+                    }
                 }
 
                 return config;

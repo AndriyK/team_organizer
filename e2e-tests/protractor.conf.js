@@ -1,6 +1,6 @@
 exports.config = {
 
-    specs: ['RegisterSpec.js'],
+    specs: ['*Spec.js'],
 
     baseUrl: 'http://localhost/team_organizer/',
 

@@ -144,7 +144,7 @@ describe('games', function() {
                     .expectGET(API_URL + '/players/33?expand=games')
                     .respond({
                         games: [
-                            {id: 49, team_id: 25, title: "Training", datetime: "2016-01-20 12:00:00", location: "field 34", presence:1},
+                            {id: 49, team_id: 25, title: "Training", datetime: "2016-01-25 12:00:00", location: "field 34", presence:1},
                             {id: 50, team_id: 25, title: "Training 2", datetime: "2016-05-20 13:00:00", location: "field 35", presence:0},
                         ]
                     });
