@@ -1,6 +1,6 @@
 <div class="well well-sm" style="margin-top:3px;" ng-show="showCreateTeamForm">
     <h4 class="text-center">New team</h4>
-    <form class="form-inline" ng-submit="createTeam.create()">
+    <form id="newTeamForm" class="form-inline" ng-submit="createTeam.create()">
         <div class="form-group">
             <label for="teamName">Name</label>
             <input type="text" id="teamName" class="form-control" placeholder="Team name" ng-model="createTeam.teamNew.name">
