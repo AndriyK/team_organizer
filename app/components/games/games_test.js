@@ -255,7 +255,7 @@ describe('games', function() {
                     var gameDate = new Date();
                     gameDate.setHours(gameDate.getHours()+4);
 
-                    var dateStr = $filter('date')(gameDate, 'yyyy-MM-dd hh-mm-00');
+                    var dateStr = $filter('date')(gameDate, 'yyyy-MM-dd HH:mm:00');
 
                     $scope.newGame.teamId = 25;
                     $scope.newGame.date = gameDate;

@@ -145,7 +145,7 @@
                 return;
             }
 
-            gamesService.addGame($scope.newGame.teamId, $filter('date')($scope.newGame.date, 'yyyy-MM-dd hh-mm-00'), $scope.newGame.location, $scope.newGame.description || 'Training')
+            gamesService.addGame($scope.newGame.teamId, $filter('date')($scope.newGame.date, 'yyyy-MM-dd HH:mm:00'), $scope.newGame.location, $scope.newGame.description || 'Training')
                 .success(function (data){
                     $scope.teams[$scope.newGame.teamId].games.push(data);
                     $scope.clearTempData();
