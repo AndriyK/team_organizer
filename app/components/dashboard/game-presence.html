@@ -1,29 +1,29 @@
 <div style="margin:10px;">
     <div class="text-center" ng-show="game.current_player_status == 'unknown'">
-        <button type="button" class="btn btn-success" ng-click="presenceCtrl.joinGame(game)">
+        <button id="joinUnknownButton" type="button" class="btn btn-success" ng-click="presenceCtrl.joinGame(game)">
             Join
         </button>
         &nbsp; or &nbsp;
-        <button type="button" class="btn btn-danger" ng-click="presenceCtrl.rejectGame(game)">
+        <button id="rejectUnknownButton" type="button" class="btn btn-danger" ng-click="presenceCtrl.rejectGame(game)">
             Deny
         </button>
     </div>
 
     <div class="text-center" ng-show="game.current_player_status == 'joined'">
         <button type="button" class="btn btn-success" disabled="disabled">
-            &nbsp;Joined&nbsp;&nbsp;
+            Joined
         </button>
-        <button type="button" class="btn btn-default btn-xs" ng-click="presenceCtrl.rejectGame(game)">
+        <button id="rejectJoinedButton" type="button" class="btn btn-default btn-xs" ng-click="presenceCtrl.rejectGame(game)">
             Reject
         </button>
     </div>
 
     <div class="text-center" ng-show="game.current_player_status == 'rejected'">
-        <button type="button" class="btn btn-danger" disabled="disabled">
-            &nbsp;Rejected&nbsp;
-        </button>
-        <button type="button" class="btn btn-default btn-xs" ng-click="presenceCtrl.joinGame(game)">
+        <button id="joinRejectedButton" type="button" class="btn btn-default btn-xs" ng-click="presenceCtrl.joinGame(game)">
             Join
+        </button>
+        <button type="button" class="btn btn-danger" disabled="disabled">
+            Rejected
         </button>
     </div>
 </div>

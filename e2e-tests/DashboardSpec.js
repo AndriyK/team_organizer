@@ -10,6 +10,9 @@ describe('my app dashboard page', function() {
 
         browser.sleep(2000);
 
+        expect(element(by.css('ul.nav-justified li.active')).getText()).toEqual('All');
+        expect(element(by.css('div.alert-info')).getText()).toContain('You have no planned games.');
+
         browser.get('#/teams');
         element(by.id('addTeamButton')).click();
         element(by.model('createTeam.teamNew.name')).sendKeys('DashboardTeam');
@@ -63,24 +66,31 @@ describe('my app dashboard page', function() {
         expect(game.getText()).not.toContain('Training');
     });
 
-    /*it('should show correct summary and set presence', function () {
+    it('should show correct summary and set presence', function () {
         expect(element(by.css('span.label-default')).getText()).toEqual('1'); // total amount of players
 
         expect(element(by.css('span.label-success')).getText()).toEqual('0'); // joined to game players
         expect(element(by.css('span.label-danger')).getText()).toEqual('0'); // rejected game players
         expect(element(by.css('span.label-warning')).getText()).toEqual('1'); // rejected game players
 
-        expect(element(by.css('button.btn-success')).getText()).toEqual('Join');
-        expect(element(by.css('button.btn-danger')).getText()).toEqual('Deny');
+        expect(element(by.id('joinUnknownButton')).getText()).toEqual('Join');
+        expect(element(by.id('rejectUnknownButton')).getText()).toEqual('Deny');
 
-        element(by.css('button.btn-success')).click(); // report presence
+        element(by.id('joinUnknownButton')).click(); // report presence
 
         expect(element(by.css('span.label-success')).getText()).toEqual('1'); // joined to game players
         expect(element(by.css('span.label-danger')).getText()).toEqual('0'); // rejected game players
-        expect(element(by.css('span.label-warning')).getText()).toEqual('0'); // rejected game players
+        expect(element(by.css('span.label-warning')).getText()).toEqual('0'); // unknown game players
         expect(element(by.css('button.btn-success[disabled=disabled]')).getText()).toEqual('Joined'); // button changed text to joined
-        expect(element(by.css('button.btn-default')).getText()).toEqual('Reject');
-    });*/
+        expect(element(by.id('rejectJoinedButton')).getText()).toEqual('Reject');
+
+        // change presence - reject the game
+        element(by.id('rejectJoinedButton')).click();
+        expect(element(by.css('span.label-success')).getText()).toEqual('0'); // joined to game players
+        expect(element(by.css('span.label-danger')).getText()).toEqual('1'); // rejected game players
+        expect(element(by.css('span.label-warning')).getText()).toEqual('0'); // unknown game players
+        expect(element(by.id('joinRejectedButton')).getText()).toEqual('Join');
+    });
 
     afterAll(function (){
         browser.get('#/teams');

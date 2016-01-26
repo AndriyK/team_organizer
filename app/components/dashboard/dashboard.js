@@ -62,6 +62,7 @@
         self.joinGame = function (game) {
             gamesService.joinGame(game.game.id)
                 .success(function(){
+                    adjustPresenceSummaryAmounts(game, 'join');
                     game.current_player_status = 'joined';
                 });
         }
@@ -69,8 +70,34 @@
         self.rejectGame = function (game) {
             gamesService.rejectGame(game.game.id)
                 .success(function(){
+                    adjustPresenceSummaryAmounts(game, 'reject');
                     game.current_player_status = 'rejected';
                 });
+        }
+
+        function adjustPresenceSummaryAmounts(game, action) {
+            if(game.current_player_status == 'unknown'){
+                if(action == 'join'){
+                    game.players_summary.joined.amount++;
+                } else {
+                    game.players_summary.rejected.amount++;
+                }
+                game.players_summary.unknown.amount--;
+            }
+
+            if(game.current_player_status == 'joined'){
+                if(action == 'reject'){
+                    game.players_summary.rejected.amount++;
+                    game.players_summary.joined.amount--;
+                }
+            }
+
+            if(game.current_player_status == 'rejected'){
+                if(action == 'join'){
+                    game.players_summary.joined.amount++;
+                    game.players_summary.rejected.amount--;
+                }
+            }
         }
     }]);
 

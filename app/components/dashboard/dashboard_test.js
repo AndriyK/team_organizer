@@ -154,7 +154,12 @@ describe('dashboard', function() {
             it('should join player to the game', function(){
                 var game = {
                     game: {id: 1},
-                    current_player_status:'unknown'
+                    current_player_status:'unknown',
+                    players_summary: {
+                        unknown: {amount: 1, players: []},
+                        joined: {amount: 0, players: []},
+                        rejected: {amount: 0, players: []}
+                    }
                 };
 
                 $httpBackend
@@ -166,12 +171,19 @@ describe('dashboard', function() {
                 $httpBackend.flush();
 
                 expect(game.current_player_status).toEqual('joined');
+                expect(game.players_summary.unknown.amount).toEqual(0);
+                expect(game.players_summary.joined.amount).toEqual(1);
             });
 
             it('should reject player from the game', function(){
                 var game = {
                     game: {id: 2},
-                    current_player_status:'unknown'
+                    current_player_status:'unknown',
+                    players_summary: {
+                        unknown: {amount: 1, players: []},
+                        joined: {amount: 0, players: []},
+                        rejected: {amount: 0, players: []}
+                    }
                 };
 
                 $httpBackend
@@ -183,6 +195,8 @@ describe('dashboard', function() {
                 $httpBackend.flush();
 
                 expect(game.current_player_status).toEqual('rejected');
+                expect(game.players_summary.unknown.amount).toEqual(0);
+                expect(game.players_summary.rejected.amount).toEqual(1);
             });
         });
 

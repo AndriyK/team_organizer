@@ -139,7 +139,7 @@ describe('app', function() {
         }));
 
         it('should save/get token from/to local storage', function() {
-            var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3QiLCJhdWQiOiJodHRwOlwvXC9sb2NhbGhvc3QiLCJpYXQiOjE0NTMxOTIxMTksImV4cCI6MTQ1Mzc5NjkxOSwidWlkIjozMywibWFpbCI6InFAcS5xIn0.SK_ZP-yb13WmV5uqbxSoEMhHvphI35_UGpp5ukUKLzc"
+            var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3QiLCJhdWQiOiJodHRwOlwvXC9sb2NhbGhvc3QiLCJpYXQiOjE0NTM4MDg1NTQsImV4cCI6MTQ1NDQxMzM1NCwidWlkIjozMywibWFpbCI6InFAcS5xIn0._YPVN1YlQIRpqiMBr94SoVgDp0-u8MxQv6dO1unPSYk"
             authService.saveToken(token);
             expect(authService.getToken()).toEqual(token);
         });
