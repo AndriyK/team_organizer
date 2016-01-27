@@ -1,7 +1,7 @@
 {
-  "name": "team-orginazer-client",
+  "name": "team-organizer-client",
   "version": "0.0.0",
-  "description": "team orginazer angular js client ",
+  "description": "team organizer angular js client ",
   "repository": "https://github.com/AndriyK/team_organizer",
   "license": "MIT",
   "devDependencies": {

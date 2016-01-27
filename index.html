@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Team orginizer</title>
+        <title>Team organizer</title>
 
         <link href="assets/css/bootstrap.min.css" rel="stylesheet">
         <link href="assets/css/bootstrap-theme.min.css" rel="stylesheet">
@@ -16,11 +16,10 @@
 
     <body ng-app="app">
         <div class="container">
-            <div ng-include="'app/shared/header/header.html'"></div>
+            <header-links></header-links>
             <div ng-view></div>
         </div>
 
-        <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script> -->
         <script src="assets/libs/angular/angular_1.4.js"></script>
         <script src="assets/libs/angular/angular_route_1.4.js"></script>
         <script src="assets/libs/angular/ui-bootstrap.js"></script>

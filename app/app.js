@@ -1,6 +1,6 @@
 (function (){
 
-    var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'user.register','dashboard', 'games', 'teams', 'shared.components']);
+    var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'user.register','dashboard', 'games', 'teams']);
 
     app.constant('API_URL', 'http://localhost/team/api/index.php/v1');
 
@@ -180,6 +180,26 @@
                 scope.size = attr.size || 17;
             }
 
+        }
+    });
+
+    app.controller('HeaderController', ['$location', 'authService', function($location, authService) {
+        this.isPageActive = function (viewLocation) {
+            return viewLocation === $location.path();
+        };
+
+        this.isUserLogged = function () {
+            return authService.isAuthed();
+        }
+
+    }]);
+
+    app.directive('headerLinks', function (){
+        return {
+            restrict: "E",
+            templateUrl: 'app/shared/header.html',
+            controller: 'HeaderController',
+            controllerAs: 'header'
         }
     });
 

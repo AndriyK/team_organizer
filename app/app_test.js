@@ -210,6 +210,38 @@ describe('app', function() {
             $rootScope.$digest();
             expect(element.html()).toContain('img ng-src="assets/img/basketball.gif" width="17px" height="17px" align="top"');
         });
-    })
+    });
+
+    describe('header controller', function(){
+        var $location, $controller, controller;
+
+        beforeEach(inject(function(_$location_, _$controller_){
+            $location = _$location_;
+            $controller = _$controller_;
+        }));
+
+        beforeEach(function() {
+            controller = $controller('HeaderController', $location);
+        });
+
+        it('should be defined header controller', function() {
+            expect(controller).toBeDefined();
+        });
+
+        it('should be functional isPageActive method', function(){
+            var path = "/login";
+
+            expect(controller.isPageActive(path)).toBeFalsy();
+
+            $location.path(path);
+
+            expect(controller.isPageActive(path)).toBeTruthy();
+        });
+
+        it('should have isUserLogged method', function(){
+            expect(controller.isUserLogged).toBeDefined();
+        });
+
+    });
 
 });
