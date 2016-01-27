@@ -5,7 +5,10 @@ exports.config = {
     suites: {
         index: 'IndexSpec.js',
         register: 'RegisterSpec.js',
-        all: ['LoginSpec.js', 'DashboardSpec.js', 'GamesSpec.js', 'TeamsSpec.js']
+        login: 'LoginSpec.js',
+        teams: 'TeamsSpec.js',
+        games: 'GamesSpec.js',
+        dashboard: 'DashboardSpec.js'
     },
 
     baseUrl: 'http://localhost/team_organizer/',
